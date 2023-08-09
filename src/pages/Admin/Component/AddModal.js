@@ -19,39 +19,45 @@ const AddModal = ({ show, handleClose, handleSubmit, title }) => {
   };
 
   return (
-   
     <div
-    className={`modal shadow-5 fade${show ? " show" : ""}`}
-    id="orderDetailsModal"
-    tabIndex="-1"
-    role="dialog"
-    aria-labelledby="orderDetailsModalLabel"
-    dialogClassName="no-scroll-modal"
-    style={{ display: show ? "block" : "none" }}
-  >
-    <div className="modal-dialog modal-dialog-scrollable" role="document">
-      <div className="modal-content h-100">
-        <div className="modal-header primary-background text-white">
-          <h5
-            className="modal-title text-uppercase px-2"
-            id="orderDetailsModalLabel"
-          >
-            <MDBIcon fas icon="plus" /> &ensp;
-            Tạo {title} mới
-          </h5>
-          <button
-            type="button"
-            className="btn-close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-            onClick={handleClose}
-          ></button>
-        </div>
-        <form onSubmit={handleFormSubmit}>
-        <div className="modal-body p-2 " style={{marginTop : `${title}` === "khuyến mãi" ? "160px" : "200px" , marginBottom : `${title}` === "khuyến mãi" ? "160px" : "200px" }}>
+      className={`modal shadow-5 fade${show ? " show" : ""}`}
+      id="orderDetailsModal"
+      tabIndex="-1"
+      role="dialog"
+      aria-labelledby="orderDetailsModalLabel"
+      dialogClassName="no-scroll-modal"
+      style={{ display: show ? "block" : "none" }}
+    >
+      <div className="modal-dialog modal-dialog-scrollable" role="document">
+        <div className="modal-content h-100">
+          <div className="modal-header primary-background text-white">
+            <h5
+              className="modal-title text-uppercase px-2"
+              id="orderDetailsModalLabel"
+            >
+              <MDBIcon fas icon="plus" /> &ensp; Tạo {title} mới
+            </h5>
+            <button
+              type="button"
+              className="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+              onClick={handleClose}
+            ></button>
+          </div>
+          <form onSubmit={handleFormSubmit} className="">
+            <div
+              className="modal-body p-2 "
+              style={{
+                marginTop: `${title}` === "khuyến mãi" ? "180px" : "230px",
+                marginBottom: `${title}` === "khuyến mãi" ? "180px" : "230px",
+              }}
+            >
               <div className="form-group mx-5 px-2">
-                <label htmlFor="inputValue" className="mb-2 primary-text">Nhập tên {title}:</label>
-                 <input
+                <label htmlFor="inputValue" className="mb-2 primary-text">
+                  Nhập tên {title}:
+                </label>
+                <input
                   type="text"
                   className="form-control"
                   id="inputValue"
@@ -60,41 +66,43 @@ const AddModal = ({ show, handleClose, handleSubmit, title }) => {
                   required
                 />
               </div>
-              {title === "khuyến mãi" && <div className="form-group mx-5 px-2 mt-4">
-                <label htmlFor="inputValue" className="mb-2 primary-text">Nhập giá trị {title}:</label>
-                 <input
-                  type="text"
-                  className="form-control"
-                  id="inputValue"
-                  value={inputValue}
-                  onChange={handleInputValueChange}
-                  required
-                />
-              </div>}
-            
-        </div>
-        <div className="modal-footer">
+              {title === "khuyến mãi" && (
+                <div className="form-group mx-5 px-2 mt-4">
+                  <label htmlFor="inputValue" className="mb-2 primary-text">
+                    Nhập giá trị {title}:
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="inputValue"
+                    value={inputValue}
+                    onChange={handleInputValueChange}
+                    required
+                  />
+                </div>
+              )}
+            </div>
+            <div className="modal-footer">
+              <button
+                type="submit"
+                className="btn btn-success primary-background text-white"
+              >
+                Lưu
+              </button>
 
-             <button
-             type="submit"
-             className="btn btn-success primary-background text-white"
-           >
-             Lưu
-           </button>
-       
-          <button
-            type="button"
-            className="btn btn-secondary"
-            data-bs-dismiss="modal"
-            onClick={handleClose}
-          >
-            Đóng
-          </button>
+              <button
+                type="button"
+                className="btn btn-secondary"
+                data-bs-dismiss="modal"
+                onClick={handleClose}
+              >
+                Đóng
+              </button>
+            </div>
+          </form>
         </div>
-        </form>
       </div>
     </div>
-  </div>
   );
 };
 

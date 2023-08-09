@@ -3,7 +3,6 @@ import Pagination from "../../../components/Pagination/Pagination";
 import ReviewItem from "./ReviewItem"
 
 const Reviews = ({reviews, avgRated,totalPages, ...rest}) => {
-    
     return ( 
 
         <div>
@@ -25,11 +24,11 @@ const Reviews = ({reviews, avgRated,totalPages, ...rest}) => {
             {reviews.length !== 0 ? (   
                 <div className="p-4">
                
-                {reviews && reviews.map((val,index)=>{
+                {reviews && reviews.map((val,index)=>(
                     <div key={index}>
                         <ReviewItem val={val} username= {val.username} color={val.color} size={val.size}/>
                     </div>
-                })}
+                ))}
                 
                 </div>
                

@@ -65,7 +65,20 @@ export const getOrdersPending = async (page) => {
         });
         return response.data;
       } catch (error) {
-        console.error('getOrdersPending fail', error);
+        console.error('cancelOrder fail', error);
+        throw error;
+      }
+    };
+
+     // recieve order by user
+     export const receiveOrder = async (id) => {
+      try {
+        const response = await api.put("order/receive",{
+          id_order: id
+        });
+        return response.data;
+      } catch (error) {
+        console.error('receiveOrder fail', error);
         throw error;
       }
     };

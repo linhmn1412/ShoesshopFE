@@ -37,7 +37,7 @@ const EditShoeForm = ({
   };
   return (
     <form onSubmit={handleFormSubmit(onSubmit)}>
-      <div className="row p-2 primary-text fw-bold">
+      <div className="row p-3 primary-text fw-bold">
         <div className="col-7 px-3 ">
         <p className="primary-text fw-bold mb-1">Mã sản phẩm: {data.id_shoe}</p>
         <p className="text-muted" style={{fontSize:"12px"}}>Nhân viên cập nhật gần nhất:&ensp;<span className="primary-text fw-bold">{data.name_staff}</span> </p>
@@ -131,37 +131,17 @@ const EditShoeForm = ({
 
         <div className="col-5 px-3">
           <div className="form-group mb-3">
-            <label htmlFor="image_1">Hình ảnh 1:</label>
+            <label htmlFor="image">Hình ảnh:</label>
             <input
               type="file"
-              className={`form-control mt-2 ${errors.image_1 ? "is-invalid" : ""}`}
-              id="image_1"
-              {...register("image_1", { required: "Vui lòng chọn hình ảnh" })}
-              onChange={(e) => handleFileChange("image_1", e)}
+              className={`form-control mt-2 ${errors.image ? "is-invalid" : ""}`}
+              id="image"
+              {...register("image", { required: "Vui lòng chọn hình ảnh" })}
+              onChange={(e) => handleFileChange("image", e)}
             />
-            {errors.image_1 && (
-              <div className="invalid-feedback">{errors.image_1.message}</div>
+            {errors.image && (
+              <div className="invalid-feedback">{errors.image.message}</div>
             )}
-          </div>
-          <div className="form-group mb-3">
-            <label htmlFor="image_2">Hình ảnh 2:</label>
-            <input
-              onChange={(e) => handleFileChange("image_2", e)}
-              type="file"
-              className={`form-control mt-2 ${errors.image_2 ? "is-invalid" : ""}`}
-              id="image_2"
-              {...register("image_2")}
-            />
-          </div>
-          <div className="form-group mb-3">
-            <label htmlFor="image_3">Hình ảnh 3:</label>
-            <input
-              onChange={(e) => handleFileChange("image_3", e)}
-              type="file"
-              className={`form-control mt-2 ${errors.image_3 ? "is-invalid" : ""}`}
-              id="image_3"
-              {...register("image_3")}
-            />
           </div>
 
           <div className="form-group">

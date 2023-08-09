@@ -47,8 +47,8 @@ const EditModal = ({ show, handleClose, handleEdit, data, title }) => {
               onClick={handleClose}
             ></button>
           </div>
-          <form onSubmit={handleFormSubmit}>
-            <div className="modal-body p-2 mx-5 " style={{ marginTop: `${title}` === "khuyến mãi" ? "130px" : "170px", marginBottom: `${title}` === "khuyến mãi" ? "130px" : "170px" }}>
+          <form onSubmit={handleFormSubmit} className="h-100">
+            <div className="modal-body p-2 mx-5 " style={{ marginTop: `${title}` === "khuyến mãi" ? "160px" : "200px", marginBottom: `${title}` === "khuyến mãi" ? "160px" : "200px" }}>
               <p className="primary-text fw-bold mb-1">Mã {title}: {data.id_category || data.id_brand || data.id_discount}</p>
               <p className="text-muted" style={{fontSize:"12px"}}>Nhân viên cập nhật gần nhất:&ensp;<span className="primary-text fw-bold">{data.name_staff}</span> </p>
               <div className="form-group  px-2">

@@ -22,17 +22,7 @@ const ProductDetail = () => {
 
   const [loading, setLoading] = useState(true);
   const { id } = useParams();
-  useEffect(() => {
-    getProductDetail(id)
-      .then((data) => {
-        setData(data.data);
-        setVariants(data.variants);
-        setSimilars(data.similarShoes);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+  useEffect(()=>{
     getDiscounts()
       .then((data) => {
         setDiscounts(data);
@@ -40,7 +30,22 @@ const ProductDetail = () => {
       .catch((error) => {
         console.error("Error getting discount:", error);
       });
+  },[]);
 
+  useEffect(()=>{
+    getProductDetail(id)
+    .then((data) => {
+      setData(data.data);
+      setVariants(data.variants);
+      setSimilars(data.similarShoes);
+      setLoading(false);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  },[id]);
+  useEffect(() => {
+   
     getReviewsProduct(id, currentPage)
       .then((data) => {
         setReviews(data.reviews.data);
@@ -51,7 +56,7 @@ const ProductDetail = () => {
       .catch((error) => {
         console.log(error);
       });
-  }, [id, currentPage]);
+  }, [ currentPage]);
 
   if (loading) {
     return <div style={{ height: "100vh" }}></div>;

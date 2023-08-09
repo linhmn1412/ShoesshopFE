@@ -88,9 +88,9 @@ export const getProductDetail = async (id) => {
 };
 
 // get image product
-export const getImageProduct = async (id, image) => {
+export const getImageProduct = async (id) => {
   try {
-    const response = await api.get(`/product/${id}/${image}`);
+    const response = await api.get(`/product/${id}/image`);
     return response.data;
   } catch (error) {
     console.error('getImageProduct fail', error);
@@ -105,6 +105,21 @@ export const getProductsAdmin = async (page) => {
     return response.data;
   } catch (error) {
     console.error('getProductsAdmin fail', error);
+    throw error;
+  }
+};
+
+// create product
+export const createProduct = async (data) => {
+  try {
+    const response = await api.post("/product-create", data, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('createProduct fail', error);
     throw error;
   }
 };

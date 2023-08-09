@@ -120,7 +120,7 @@ const TableCart = () => {
                   </td>
                   <td>
                     <img
-                      src={`${BASE_URL}/product/${val.id_shoe}/image_1`}
+                      src={`${BASE_URL}/product/${val.id_shoe}/image`}
                       alt="..."
                       className="img-fluid rounded-start"
                       width="80px"

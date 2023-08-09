@@ -9,7 +9,7 @@ const OrderDetail = ({ item }) => {
         <div className="row">
           <div className="col-2">
             <img
-              src={`${BASE_URL}/product/${item.shoe_variant.id_shoe}/image_1`}
+              src={`${BASE_URL}/product/${item.shoe_variant.id_shoe}/image`}
               alt=""
               className="w-100"
             />

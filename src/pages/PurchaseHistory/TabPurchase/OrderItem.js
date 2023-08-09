@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import CreatedReviewsModal from "../Modal/CreatedReviewsModal";
 import ReviewsModal from "../Modal/ReviewsModal";
 
-const OrderItem = ({ order , onCancelOrder}) => {
+const OrderItem = ({ order , onCancelOrder, onReceiveOrder}) => {
     const [orderData, setOrderData] = useState(order);
     const [showCreatedReviewModal, setShowCreatedReviewModal] = useState(false);
     const [showReviewModal, setShowReviewModal] = useState(false);
@@ -14,23 +14,28 @@ const OrderItem = ({ order , onCancelOrder}) => {
         setShowCreatedReviewModal(true);
       };
       const handleReview = () => {
+       // console.log(orderData);
         setShowReviewModal(true);
+
       };
-      useEffect(()=>{
-        setIsCheckReview(order.reviews.length > 0 ? true : false)
-      },[order.reviews]);
       const handleReviewSubmit = (newReview) => {
         setOrderData((prevOrderData) => ({
             ...prevOrderData,
-            reviews: [...prevOrderData.reviews, newReview],
+            reviews: [...prevOrderData.reviews, ...newReview],
           }));
       };
-      console.log("orderData",orderData);
+      useEffect(()=>{
+        setIsCheckReview(order.reviews.length > 0 ? true : false);
+      },[order.reviews]);
+      useEffect(()=>{
+        setOrderData(order)
+      },[order.status]);
+
   return (
     <div className="card mb-3">
       <div className="container">
         <div className="card-header">
-          <span className="card-title fw-bold text-text-uppercase primary-text px-2">
+          <span className={`card-title fw-bold text-uppercase px-2 ${orderData.status === "Đã hủy" ? "text-danger" : "primary-text" } ?`}>
             {orderData.status}
           </span>
         </div>
@@ -67,7 +72,8 @@ const OrderItem = ({ order , onCancelOrder}) => {
                 onClick={handleReview}>Xem Đánh Giá</button>
               )}
               {orderData.status === "Đã xác nhận" && (
-                <button className="btn btn-success primary-background mx-2">
+                <button className="btn btn-success primary-background mx-2"
+                onClick={ ()=> onReceiveOrder(order.id_order)}>
                   Đã nhận được hàng
                 </button>
               )}
@@ -88,6 +94,7 @@ const OrderItem = ({ order , onCancelOrder}) => {
           show={showReviewModal}
           handleClose={() => setShowReviewModal(false)}
           order={orderData}
+          
         />
       )}
           </div>

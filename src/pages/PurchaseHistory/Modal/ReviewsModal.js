@@ -4,18 +4,16 @@ import ReviewItem from "../../Product/Reviews/ReviewItem";
 
 const ReviewsModal = ({ show, handleClose, order }) => {
     const user = useSelector((state)=>state.user.user);
-  const handleCloseModal = () => {
+    const handleCloseModal = () => {
     handleClose();
   };
   const renderOrderDetailsWithReviews = () => {
     return order.order_details.map((orderDetail) => {
-      // Find the review corresponding to the current order detail based on id_variant and id_order
       const review = order.reviews.find(
         (review) =>
           review.id_variant === orderDetail.id_variant &&
           review.id_order === orderDetail.id_order
       );
-
       return (
         <div key={orderDetail.id_variant}>
              <div className="row mb-2">
@@ -62,7 +60,8 @@ const ReviewsModal = ({ show, handleClose, order }) => {
               ></button>
             </div>
             <div className="modal-body px-4 py-2">
-                {renderOrderDetailsWithReviews()}
+
+              {renderOrderDetailsWithReviews()}
             </div>
             <div className="modal-footer">
               <button

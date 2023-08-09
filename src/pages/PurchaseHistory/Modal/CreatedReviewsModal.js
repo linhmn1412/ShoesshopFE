@@ -32,13 +32,13 @@ const CreatedReviewsModal = ({ show,onCheckReview, handleClose, orderDetails, on
       rated: ratings[index],
       comment: comments[index],
     }));
-    console.log("reviewsData",JSON.stringify(reviewsData));
-    createReviews(JSON.stringify(reviewsData))
+    //console.log("reviewsData",reviewsData);
+    createReviews(reviewsData)
     .then((response) => {
         toast.success(response.message);
-        onCheckReview(true);
-        console.log(response);
-       // onReviewSubmit(response.reviews);
+        onCheckReview(true);  
+       // console.log(response);
+        onReviewSubmit(response.reviews);
         handleClose();
       })
       .catch((error) => {
@@ -56,7 +56,6 @@ const CreatedReviewsModal = ({ show,onCheckReview, handleClose, orderDetails, on
       tabIndex="-1"
       role="dialog"
       aria-labelledby="orderDetailsModalLabel"
-      dialogClassName="no-scroll-modal"
       style={{ display: show ? "block" : "none" }}
     >
       <div className="modal-dialog modal-dialog-scrollable" role="document">

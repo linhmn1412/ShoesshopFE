@@ -1,5 +1,6 @@
-import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { createProduct } from "../../../services/productService";
+import { toast } from "react-toastify";
 
 const AddShoeForm = ({
   handleClose,
@@ -16,19 +17,30 @@ const AddShoeForm = ({
   } = useForm();
 
   const onSubmit = (data) => {
-    // Call the handleSubmit function with the new product data
-    handleSubmit(data);
-
-    // Clear the form fields
+    const formData = new FormData();
+    formData.append("image", data.image[0]);
+    formData.append("name_shoe", data.name);
+    formData.append("id_category", data.category);
+    formData.append("id_brand", data.brand);
+    formData.append("id_discount", data.discount);
+    formData.append("price",data.price);
+    formData.append("description", description.value);
+    createProduct(formData)
+        .then((data)=>{
+            toast.success(data.message);
+        })
+        .catch((error)=>{
+          toast.error("Tao san pham that bai");
+          console.log(error);
+        });
+   
     reset();
-
-    // Close the modal
     handleClose();
   };
 
   return (
     <form onSubmit={handleFormSubmit(onSubmit)}>
-      <div className="row p-3 primary-text fw-bold">
+      <div className="row p-5 primary-text fw-bold">
         <div className="col-7 px-3 ">
           <div className="form-group mb-3 ">
             <label htmlFor="name">Tên sản phẩm:</label>
@@ -115,42 +127,22 @@ const AddShoeForm = ({
 
         <div className="col-5 px-3">
           <div className="form-group mb-3">
-            <label htmlFor="image_1">Hình ảnh 1:</label>
+            <label htmlFor="image">Hình ảnh:</label>
             <input
               type="file"
-              className={`form-control mt-2 ${errors.image_1 ? "is-invalid" : ""}`}
-              id="image_1"
-              {...register("image_1", { required: "Vui lòng chọn hình ảnh" })}
+              className={`form-control mt-2 ${errors.image ? "is-invalid" : ""}`}
+              id="image"
+              {...register("image", { required: "Vui lòng chọn hình ảnh" })}
             />
-            {errors.image_1 && (
-              <div className="invalid-feedback">{errors.image_1.message}</div>
+            {errors.image && (
+              <div className="invalid-feedback">{errors.image.message}</div>
             )}
-          </div>
-          <div className="form-group mb-3">
-            <label htmlFor="image_2">Hình ảnh 2:</label>
-            <input
-              type="file"
-              className={`form-control mt-2 ${errors.image_2 ? "is-invalid" : ""}`}
-              id="image_2"
-              {...register("image_2")}
-            />
-          </div>
-          <div className="form-group mb-3">
-            <label htmlFor="image_3">Hình ảnh 3:</label>
-            <input
-              type="file"
-              className={`form-control mt-2 ${errors.image_3 ? "is-invalid" : ""}`}
-              id="image_3"
-              {...register("image_3")}
-            />
           </div>
 
           <div className="form-group">
             <label htmlFor="description">Mô tả:</label>
             <textarea
-              className={`form-control mt-2 ${
-                errors.description ? "is-invalid" : ""
-              }`}
+              className={`form-control mt-2 `}
               id="description"
               {...register("description")}
               style={{ height: "120px", resize: "vertical" }}

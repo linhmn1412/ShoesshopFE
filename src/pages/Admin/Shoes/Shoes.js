@@ -165,7 +165,7 @@ const Shoes = () => {
                   </td>
                   <td className="p-2">
                   <img
-                      src={`${BASE_URL}/product/${val.id_shoe}/image_1`}
+                      src={`${BASE_URL}/product/${val.id_shoe}/image`}
                       alt="..."
                       className="img-fluid rounded-start"
                       width="60px"

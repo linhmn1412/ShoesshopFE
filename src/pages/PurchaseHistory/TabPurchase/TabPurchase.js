@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import Breadcrumb from "../../../components/Breadcrumb/Breadcrumb";
 import TabContent from "./TabContent";
 import { useEffect, useState } from "react";
-import { cancelOrder, getOrdersByUser } from "../../../services/orderService";
+import { cancelOrder, getOrdersByUser, receiveOrder } from "../../../services/orderService";
 import { toast } from "react-toastify";
 
 const TabPurchase = () => {
@@ -11,14 +11,10 @@ const TabPurchase = () => {
     { text: "Lịch sử mua hàng", link: "/purchase" },
   ];
   const [allOrders, setAllOrders] = useState([]);
-  const [typeOrders, setTypeOrders] = useState([]);
-  const [loading, setLoading] = useState(true);
-
   useEffect(() => {
     getOrdersByUser()
       .then((data) => {
         setAllOrders(data);
-        setLoading(false);
       })
       .catch((error) => console.log(error));
   }, []);
@@ -35,7 +31,7 @@ const TabPurchase = () => {
 
     cancelOrder(id)
       .then((data) => {
-        toast.warning(data.message);
+        toast.success(data.message);
       })
       .catch((error) => {
         console.log(error);
@@ -43,6 +39,26 @@ const TabPurchase = () => {
         toast.error("Hủy đơn thành thất bại. Hãy thử lại sau!");
       });
     };
+
+    const handleRecieveOrder = (id) => {
+      const orderIndex = allOrders.findIndex((order) => order.id_order === id);
+  
+      if (orderIndex !== -1) {
+        const updatedOrders = [...allOrders];
+        updatedOrders[orderIndex].status = "Hoàn thành";
+        setAllOrders(updatedOrders);
+      }
+  
+      receiveOrder(id)
+        .then((data) => {
+          toast.success(data.message);
+        })
+        .catch((error) => {
+          console.log(error);
+          setAllOrders(allOrders);
+          toast.error("Hủy đơn thành thất bại. Hãy thử lại sau!");
+        });
+      };
   return (
     <div className="container ">
       <Breadcrumb items={breadcrumbItems} />
@@ -122,7 +138,7 @@ const TabPurchase = () => {
           role="tabpanel"
           aria-labelledby="ex3-tab-1"
         >
-          <TabContent type="All" orders={allOrders} onCancelOrder={handleCancelOrder}/>
+          <TabContent type="All" orders={allOrders} onCancelOrder={handleCancelOrder} onReceiveOrder= {handleRecieveOrder}/>
         </div>
         <div
           className="tab-pane fade"
@@ -130,7 +146,7 @@ const TabPurchase = () => {
           role="tabpanel"
           aria-labelledby="ex3-tab-2"
         >
-          <TabContent type="Chờ xác nhận" orders={allOrders} onCancelOrder={handleCancelOrder}/>
+          <TabContent type="Chờ xác nhận" orders={allOrders} onCancelOrder={handleCancelOrder} onReceiveOrder= {handleRecieveOrder}/>
         </div>
         <div
           className="tab-pane fade"
@@ -138,7 +154,7 @@ const TabPurchase = () => {
           role="tabpanel"
           aria-labelledby="ex3-tab-3"
         >
-          <TabContent type="Đã xác nhận" orders={allOrders} onCancelOrder={handleCancelOrder}/>
+          <TabContent type="Đã xác nhận" orders={allOrders} onCancelOrder={handleCancelOrder} onReceiveOrder= {handleRecieveOrder}/>
         </div>
         <div
           className="tab-pane fade"
@@ -146,7 +162,7 @@ const TabPurchase = () => {
           role="tabpanel"
           aria-labelledby="ex3-tab-4"
         >
-          <TabContent type="Hoàn thành" orders={allOrders} onCancelOrder={handleCancelOrder}/>
+          <TabContent type="Hoàn thành" orders={allOrders} onCancelOrder={handleCancelOrder} onReceiveOrder= {handleRecieveOrder}/>
         </div>
         <div
           className="tab-pane fade"
@@ -154,7 +170,7 @@ const TabPurchase = () => {
           role="tabpanel"
           aria-labelledby="ex3-tab-5"
         >
-          <TabContent type="Đã hủy" orders={allOrders} onCancelOrder={handleCancelOrder}/>
+          <TabContent type="Đã hủy" orders={allOrders} onCancelOrder={handleCancelOrder} onReceiveOrder= {handleRecieveOrder}/>
         </div>
       </div>
       </div>

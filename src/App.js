@@ -4,7 +4,6 @@ import RoutesConfig from './routes/RoutesConfig';
 import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
-  console.log(1)
   return (
     <div className="App">
       <RoutesConfig/>

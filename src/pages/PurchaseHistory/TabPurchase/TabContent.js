@@ -1,14 +1,15 @@
 import OrderItem from "./OrderItem";
 import noOrderImage from "../../../assets/images/no-orderpng.png";
-const TabContent = ({ type, orders, onCancelOrder }) => {
+const TabContent = ({ type, orders, ...rest }) => {
 const typeOrders = orders.filter((item) => (type === "All" ? true : item.status === type));
-  return (
+if(type === "All")
+console.log(typeOrders);
+  return (  
     <div className="p-2">
       {typeOrders.length > 0 ? (
-        typeOrders &&
         typeOrders.map((val) => (
           <div key={val.id_order}>
-            <OrderItem order={val} onCancelOrder = {onCancelOrder}/>
+            <OrderItem order={val} {...rest}/>
           </div>
         ))
       ) : (

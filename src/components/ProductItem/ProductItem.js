@@ -20,7 +20,7 @@ const ProductItem = ({ listProducts,col }) => {
                   data-mdb-ripple-color="light"
                 >
                   <img
-                    src={`${BASE_URL}/product/${val.id_shoe}/image_1`}
+                    src={`${BASE_URL}/product/${val.id_shoe}/image`}
                     className="w-100 rounded "
                     style={{ height: "250px", opacity :0.9 }}
                   />
@@ -36,7 +36,7 @@ const ProductItem = ({ listProducts,col }) => {
               data-mdb-ripple-color="light"
             >
               <img
-                src={`${BASE_URL}/product/${val.id_shoe}/image_1`}
+                src={`${BASE_URL}/product/${val.id_shoe}/image`}
                 className="w-100 rounded"
                 style={{ height: "250px" }}
               />
