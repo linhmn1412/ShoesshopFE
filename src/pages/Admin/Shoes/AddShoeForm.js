@@ -1,6 +1,10 @@
 import { useForm } from "react-hook-form";
 import { createProduct } from "../../../services/productService";
 import { toast } from "react-toastify";
+import uploadImage from '../../../assets/images/download.png';
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { MDBIcon } from "mdb-react-ui-kit";
 
 const AddShoeForm = ({
   handleClose,
@@ -15,6 +19,26 @@ const AddShoeForm = ({
     formState: { errors },
     reset,
   } = useForm();
+
+  const [defaultImage, setDefaultImage] = useState(uploadImage);
+  const handleFileChange = (fieldName, event) => {
+    // const selectedFile = event.target.files[0];
+    // setValue(fieldName, selectedFile); // Sử dụng hàm setValue từ useForm để cập nhật giá trị
+    // const defaultValue = data[fieldName]; // data là giá trị được truyền từ props
+    // if (!selectedFile && defaultValue) {
+    //   setValue(fieldName, defaultValue);
+    // }
+    const selectedFile = event.target.files[0];
+
+    if (selectedFile) {
+      const imageUrl = URL.createObjectURL(selectedFile);
+      setDefaultImage(imageUrl);
+    }
+  };
+  const handleUploadButtonClick = () => {
+    // Triggers click event on the hidden input element
+    document.getElementById("inputImage").click();
+  };
 
   const onSubmit = (data) => {
     const formData = new FormData();
@@ -39,26 +63,27 @@ const AddShoeForm = ({
   };
 
   return (
-    <form onSubmit={handleFormSubmit(onSubmit)}>
-      <div className="row p-5 primary-text fw-bold">
-        <div className="col-7 px-3 ">
-          <div className="form-group mb-3 ">
+    <form onSubmit={handleFormSubmit(onSubmit)} className="h-100">
+      <div className="modal-body">
+      <div className="row p-4 primary-text fw-bold">
+        <div className="col-7 px-1 ">
+          <div className="form-group my-4 ">
             <label htmlFor="name">Tên sản phẩm:</label>
             <input
               type="text"
-              className={`form-control mt-2  ${errors.name ? "is-invalid" : ""}`}
+              className={`form-control ${errors.name ? "is-invalid" : ""}`}
               id="name"
               {...register("name", { required: "Vui lòng nhập tên sản phẩm" })}
             />
             {errors.name && (
-              <div className="invalid-feedback">{errors.name.message}</div>
+              <div className="invalid-feedback">*{errors.name.message}</div>
             )}
           </div>
 
-          <div className="form-group mb-3">
+          <div className="form-group my-4">
             <label htmlFor="category">Danh mục:</label>
             <select
-              className={`form-control mt-2 ${errors.category ? "is-invalid" : ""}`}
+              className={`form-control  ${errors.category ? "is-invalid" : ""}`}
               id="category"
               {...register("category", { required: "Vui lòng chọn danh mục" })}
             >
@@ -70,14 +95,14 @@ const AddShoeForm = ({
               ))}
             </select>
             {errors.category && (
-              <div className="invalid-feedback">{errors.category.message}</div>
+              <div className="invalid-feedback">*{errors.category.message}</div>
             )}
           </div>
 
-          <div className="form-group mb-3">
+          <div className="form-group my-4">
             <label htmlFor="brand">Thương hiệu:</label>
             <select
-              className={`form-control mt-2 ${errors.brand ? "is-invalid" : ""}`}
+              className={`form-control ${errors.brand ? "is-invalid" : ""}`}
               id="brand"
               {...register("brand", { required: "Vui lòng chọn thương hiệu" })}
             >
@@ -89,14 +114,14 @@ const AddShoeForm = ({
               ))}
             </select>
             {errors.brand && (
-              <div className="invalid-feedback">{errors.brand.message}</div>
+              <div className="invalid-feedback">*{errors.brand.message}</div>
             )}
           </div>
 
-          <div className="form-group mb-3">
+          <div className="form-group my-4">
             <label htmlFor="discount">Khuyến mãi:</label>
             <select
-              className={`form-control mt-2 ${errors.discount ? "is-invalid" : ""}`}
+              className={`form-control  ${errors.discount ? "is-invalid" : ""}`}
               id="discount"
               {...register("discount")}
             >
@@ -108,11 +133,11 @@ const AddShoeForm = ({
               ))}
             </select>
           </div>
-          <div className="form-group mb-3">
+          <div className="form-group my-4">
             <label htmlFor="price">Giá tiền:</label>
             <input
               type="number"
-              className={`form-control mt-2 ${errors.price ? "is-invalid" : ""}`}
+              className={`form-control ${errors.brand ? "is-invalid" : ""}`}
               id="price"
               {...register("price", {
                 required: "Vui lòng nhập giá sản phẩm",
@@ -120,29 +145,46 @@ const AddShoeForm = ({
               })}
             />
             {errors.price && (
-              <div className="invalid-feedback">{errors.price.message}</div>
+              <div className="invalid-feedback">*{errors.price.message}</div>
             )}
           </div>
         </div>
 
         <div className="col-5 px-3">
-          <div className="form-group mb-3">
-            <label htmlFor="image">Hình ảnh:</label>
+        <div className="form-group my-4" >
+          <label htmlFor="image">Hình ảnh:</label>
+            <div className=" d-flex align-items-center">
+              {defaultImage && (
+                <img
+                className="p-3 card mt-2"
+                  src={defaultImage}
+                  alt=""
+                  style={{ width: "200px", height: "200px" }}
+                />
+              )}
+              <Link onClick={handleUploadButtonClick} to="#" className="mx-3 primary-text">
+              Tải ảnh lên&ensp;
+              <MDBIcon fas icon="upload" />
+            </Link>
+            </div>
+            
             <input
               type="file"
-              className={`form-control mt-2 ${errors.image ? "is-invalid" : ""}`}
-              id="image"
+              className={`form-control  ${errors.image ? "is-invalid" : ""}`}
+              id="inputImage"
               {...register("image", { required: "Vui lòng chọn hình ảnh" })}
+              style={{ display: "none" }}
+              onChange={(e) => handleFileChange("image", e)}
             />
             {errors.image && (
               <div className="invalid-feedback">{errors.image.message}</div>
             )}
           </div>
 
-          <div className="form-group">
+          <div className="form-group my-4">
             <label htmlFor="description">Mô tả:</label>
             <textarea
-              className={`form-control mt-2 `}
+              className={`form-control `}
               id="description"
               {...register("description")}
               style={{ height: "120px", resize: "vertical" }}
@@ -150,8 +192,8 @@ const AddShoeForm = ({
           </div>
         </div>
       </div>
-
-      <div className="modal-footer">
+      </div>
+      <div className="modal-footer ">
         <button
           type="button"
           className="btn btn-secondary"

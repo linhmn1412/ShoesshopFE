@@ -30,9 +30,8 @@ const AddShoeModal = ({showModal,handleClose,...rest}) => {
                 onClick={handleClose}
               ></button>
             </div>
-            <div className="modal-body h-100">
+            
           <AddShoeForm handleClose= {handleClose} {...rest}/>
-            </div>
           </div>
         </div>
       </div>

@@ -3,8 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from "../../../services/AuthSlice";
-import { CartContext } from "../../../contexts/CartContext";
-
 const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const { register, handleSubmit, formState: { errors } } = useForm();
@@ -13,7 +11,6 @@ const LoginForm = () => {
   const user = useSelector((state) => state.user.user);
   const successLogin = useSelector((state) => state.user.successLogin);
   const loading = useSelector((state) => state.user.loading);
-  const {resetCart} = useContext(CartContext);
   const onSubmit = (data) => {
     dispatch(login(data))
     .then((response) => {

@@ -1,12 +1,11 @@
 import React, { createContext, useCallback, useEffect, useState } from "react";
 import { getCartItemByUser, remove, update } from "../services/cartItemService";
 import { addToCart } from "../services/cartItemService";
-import { useDispatch, useSelector } from "react-redux";
+import {  useSelector } from "react-redux";
 import { toast } from "react-toastify";
 export const CartContext = createContext();
 
 const CartProvider = ({ children }) => {
-  const dispatch = useDispatch();
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [totalCartItems, setTotalCartItems] = useState(0);

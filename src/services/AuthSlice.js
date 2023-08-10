@@ -1,141 +1,3 @@
-// import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-// import api from ".";
-// import { clearHeader, setHeader } from './apiService';
-
-
-// const initialState = {
-    
-//     user: null,
-//     accessToken: null,
-//     loading: false,
-//     successLogin: false,
-//   };
-
-// export const loginUser = createAsyncThunk('user/login', async (data) => {
-//   try {
-//     const response = await api.post('/login', data);
-//     setHeader(response.data.token);
-//    // console.log("token",response.data.token);
-//     return response.data;
-//   } catch (error) {
-//     throw new Error('Login failed!');
-//   }
-// });
-
-// export const getUserInfo = async () => {
-//   try {
-//     const response = await api.get('/user');
-//     return response.data;
-
-//   } catch (error) {
-//     console.error('Error fetching user info:', error);
-//   }
-// };
-
-// const userSlice = createSlice({
-//     name: 'user',
-//     initialState: initialState,
-//     reducers: {
-//     logout: (state, action) => {
-//       state.user = null;
-//       state.successLogin = false;
-//       state.loading = false;
-//       state.error = null;
-//       clearHeader();
-//       localStorage.removeItem("token");
-//     },
-//   },
-//   extraReducers: (builder) => {
-//     builder
-//       .addCase(loginUser.pending, (state) => {
-//         state.loading = true;
-//         state.error = null;
-//       })
-//       .addCase(loginUser.fulfilled, (state, action) => {
-//         state.loading = true;
-//         state.error = null;
-//         if (action.payload) {
-//           state.successLogin = true;
-//           state.user= action.payload.user;
-//           state.accessToken= action.payload.access_token;
-//           localStorage.setItem("token", action.payload.access_token);
-//         } else {
-//           state.successLogin = false;
-//         }
-//       })
-//       .addCase(loginUser.rejected, (state, action) => {
-//         state.loading = false;
-//         state.successLogin = false;
-//         state.error = action.error.message;
-//       });
-//   },
-// });
-
-// export const { logout } = userSlice.actions;
-// export default userSlice.reducer;
-// import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-// import api from ".";
-
-// const initialState = {
-//   user: null,
-//   accessToken: null,
-//   loading: false,
-//   successLogin: false,
-// };
-
-// export const login = createAsyncThunk('login', async (data) => {
-//   try {
-//     const response = await api.post('/login', data);
-//     setHeader(response.data.token);
-//     return response.data;
-//   } catch (error) {
-//     throw new Error('Login failed!');
-//   }
-// });
-
-// export const logout = createAsyncThunk('logout', async () => {
-//   try {
-//     clearHeader();
-//     localStorage.removeItem("token");
-//     return null;
-//   } catch (error) {
-//     throw new Error('Logout failed!');
-//   }
-// });
-
-// const userSlice = createSlice({
-//   name: 'user',
-//   initialState: initialState,
-//   reducers: {
-   
-//   },
-//   extraReducers: (builder) => {
-//     builder
-//       .addCase(login.pending, (state) => {
-//         state.loading = true;
-//       })
-//       .addCase(login.fulfilled, (state, action) => {
-//         state.loading = false;
-//         state.successLogin = true;
-//         state.user = action.payload.user;
-//         state.accessToken = action.payload.access_token;
-//         localStorage.setItem("token", action.payload.access_token);
-//       })
-//       .addCase(login.rejected, (state) => {
-//         state.loading = false;
-//         state.successLogin = false;
-//       })
-//       .addCase(logout.fulfilled, (state) => {
-//         state.user = null;
-//         state.successLogin = false;
-//         state.loading = false;
-//         state.accessToken = null;
-//       })
-//       .addCase(logout.rejected, (state) => {
-//       });
-//   },
-// });
-
 // export default userSlice.reducer;
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import api from ".";
@@ -146,10 +8,11 @@ const initialState = {
   accessToken: null,
   loading: false,
   successLogin: false,
-  userChanged : false
+  successRegister: false,
+  notiErrors : null
 };
 
-// Thunk action để thực hiện việc đăng nhập
+// Thunk action to login
 export const login = createAsyncThunk('login', async (data) => {
   try {
     const response = await api.post('/login', data);
@@ -159,7 +22,17 @@ export const login = createAsyncThunk('login', async (data) => {
   }
 });
 
-// Thunk action để lấy thông tin người dùng từ server
+// Thunk action to register
+export const registerAccount = createAsyncThunk('registerAccount', async (data) => {
+  try {
+    const response = await api.post('/register', data);
+    return response.data;
+  } catch (error) {
+    return error.response.data.errors;
+  }
+});
+
+// Thunk action to get user info
 export const getUserInfo = createAsyncThunk('getUserInfo', async () => {
   try {
     const response = await api.get('/user');
@@ -212,6 +85,31 @@ const userSlice = createSlice({
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
         state.successLogin = false;
+        state.error = action.error.message;
+      })
+      .addCase(registerAccount.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.notiErrors = null;
+        state.successRegister = false;
+      })
+      .addCase(registerAccount.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        if (action.payload) {
+          if(action.payload.errors) {
+            state.notiErrors = action.payload.errors;
+          }
+          else {
+            state.successRegister = true;
+          }
+        } else {
+          state.successLogin = false;
+        }
+      })
+      .addCase(registerAccount.rejected, (state, action) => {
+        state.successRegister = false;
+        state.loading = false;
         state.error = action.error.message;
       })
       .addCase(getUserInfo.pending, (state) => {
