@@ -9,7 +9,6 @@ const AddShoeModal = ({showModal,handleClose,...rest}) => {
         tabIndex="-1"
         role="dialog"
         aria-labelledby="orderDetailsModalLabel"
-        dialogClassName="no-scroll-modal"
         style={{ display: showModal ? "block" : "none" }}
       >
         <div className="modal-dialog modal-dialog-scrollable set-width-960 "  role="document">

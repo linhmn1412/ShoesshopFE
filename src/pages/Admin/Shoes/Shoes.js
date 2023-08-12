@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Pagination from "../../../components/Pagination/Pagination";
 import { BASE_URL } from "../../../services";
-import { getAllProducts, getProductsAdmin } from "../../../services/productService";
+import { createProduct, deleteProduct, getAllProducts, getProductsAdmin, updateProduct } from "../../../services/productService";
 import { formatMoney } from "../../../utils/formatMoney";
 import { MDBIcon } from "mdb-react-ui-kit";
 import InputSearch from "../../../components/Header/InputSearch/InputSearch";
@@ -10,6 +10,7 @@ import { getAllCategories } from "../../../services/categoryService";
 import { getAllBrands } from "../../../services/brandService";
 import { getAllDiscounts } from "../../../services/discountService";
 import EditShoeModal from "./EditShoeModal";
+import { toast } from "react-toastify";
 
 const Shoes = () => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -38,24 +39,24 @@ const Shoes = () => {
       fetchData();
     },[]);
   useEffect(()=>{
-    const fetchData = async () => {
-      try {
-        const [productsResponse] = await Promise.all([
-          getProductsAdmin(currentPage),
-        ]);
-        setAllProducts(productsResponse.data);
-        setTotalPages(productsResponse.last_page);
-        setLoading(false);
-      } catch (error) {
-        console.log(error);
-        setLoading(false);
-      }
-    };
+   
 
-    fetchData();
+    fetchDataProduct();
   }, [currentPage]);
 
-  
+  const fetchDataProduct = async () => {
+    try {
+      const [productsResponse] = await Promise.all([
+        getProductsAdmin(currentPage),
+      ]);
+      setAllProducts(productsResponse.data);
+      setTotalPages(productsResponse.last_page);
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+  };
     
     const getDescription = (text) => {
         if (text && text.length > 40) {
@@ -74,9 +75,18 @@ const Shoes = () => {
 
   const handleCloseModalAdd = () => {
     setShowModalAdd(false);
+    
   };
-  const handleAddProduct = ()=>{
-
+  const handleAddProduct = (formData)=>{
+    createProduct(formData)
+    .then((data)=>{
+        toast.success(data.message);
+        fetchDataProduct();
+    })
+    .catch((error)=>{
+      toast.error("Tao san pham that bai");
+      console.log(error);
+    });
   };
 
   const handleShowModalEdit = (data) => {
@@ -87,9 +97,30 @@ const Shoes = () => {
   const handleCloseModalEdit = () => {
     setShowModalEdit(false);
   };
-  const handleEditProduct = ()=>{
-
+  const handleEditProduct = (formData, id)=>{ 
+  updateProduct(formData, id)
+    .then((data)=>{
+        toast.success(data.message);
+        fetchDataProduct();
+    })
+    .catch((error)=>{
+      toast.error("Cap nhat san pham that bai");
+      console.log(error);
+    });
   };
+
+  const handleDelete = (id) =>[
+    deleteProduct(id)
+    .then((data)=>{
+      if(data.status === 200){
+        toast.success(data.data.message);
+        fetchDataProduct();
+      }
+      else {
+        toast.error(data.data.message);
+      }
+    })
+  ]
     return ( 
         <div className="pt-2 px-3 ">
               <h5 className="text-uppercase primary-text pt-2  px-2">Quản lý giày dép</h5>
@@ -212,7 +243,7 @@ const Shoes = () => {
                       type="button"
                       className="btn btn-danger py-2 px-3"
                       title="Xóa"
-                    
+                      onClick={()=>handleDelete(val.id_shoe)}
                     >
                       <MDBIcon far icon="trash-alt" />
                     </button>

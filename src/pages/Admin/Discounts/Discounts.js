@@ -6,7 +6,7 @@ const Discounts = () => {
   const columnHeaders = [
     { key: "id_discount", title: "Mã KM", width: "10%" },
     { key: "name_discount", title: "Tên khuyến mãi", width: "25%" },
-    { key: "discount_value", title: "Giá trị khuyến mãi(%)", width: "20%" },
+    { key: "discount_value", title: "Giá trị khuyến mãi", width: "20%" },
     { key: "name_staff", title: "Nhân viên cập nhật", width: "25%" },
 
   ];

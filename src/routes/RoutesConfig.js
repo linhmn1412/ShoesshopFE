@@ -15,12 +15,12 @@ import Categories from "../pages/Admin/Categories/Categories";
 import Brands from "../pages/Admin/Brands/Brands";
 import Shoes from "../pages/Admin/Shoes/Shoes";
 import Discounts from "../pages/Admin/Discounts/Discounts";
-import Accounts from "../pages/Admin/Account";
 import Statistics from "../pages/Admin/Statistics";
 import OrdersPending from "../pages/Admin/OrdersPending/OrdersPending";
 import Orders from "../pages/Admin/Orders/Order";
 import Account from "../pages/Account/Account";
 import PurchaseHistory from "../pages/PurchaseHistory/PurchaseHistory";
+import Staffs from "../pages/Admin/Staffs/Staffs";
 
 const RoutesConfig = () => {
   const user = useSelector((state) => state.user.user);
@@ -156,7 +156,7 @@ const RoutesConfig = () => {
               path="admin/accounts"
               element={
                 <ProtectedAdminRoute>
-                  <Accounts />
+                  <Staffs />
                 </ProtectedAdminRoute>
               }
             />

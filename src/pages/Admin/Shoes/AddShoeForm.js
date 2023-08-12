@@ -21,16 +21,11 @@ const AddShoeForm = ({
   } = useForm();
 
   const [defaultImage, setDefaultImage] = useState(uploadImage);
-  const handleFileChange = (fieldName, event) => {
-    // const selectedFile = event.target.files[0];
-    // setValue(fieldName, selectedFile); // Sử dụng hàm setValue từ useForm để cập nhật giá trị
-    // const defaultValue = data[fieldName]; // data là giá trị được truyền từ props
-    // if (!selectedFile && defaultValue) {
-    //   setValue(fieldName, defaultValue);
-    // }
-    const selectedFile = event.target.files[0];
-
+const [valueImage, setValueImage] = useState("");
+  const handleFileChange = ( e) => {
+    const selectedFile = e.target.files[0];
     if (selectedFile) {
+      setValueImage(selectedFile);
       const imageUrl = URL.createObjectURL(selectedFile);
       setDefaultImage(imageUrl);
     }
@@ -41,22 +36,17 @@ const AddShoeForm = ({
   };
 
   const onSubmit = (data) => {
+    console.log("data",data);
     const formData = new FormData();
-    formData.append("image", data.image[0]);
+    formData.append("image",valueImage);
     formData.append("name_shoe", data.name);
     formData.append("id_category", data.category);
     formData.append("id_brand", data.brand);
     formData.append("id_discount", data.discount);
     formData.append("price",data.price);
     formData.append("description", description.value);
-    createProduct(formData)
-        .then((data)=>{
-            toast.success(data.message);
-        })
-        .catch((error)=>{
-          toast.error("Tao san pham that bai");
-          console.log(error);
-        });
+    handleSubmit(formData);
+   
    
     reset();
     handleClose();
@@ -137,7 +127,7 @@ const AddShoeForm = ({
             <label htmlFor="price">Giá tiền:</label>
             <input
               type="number"
-              className={`form-control ${errors.brand ? "is-invalid" : ""}`}
+              className={`form-control ${errors.price ? "is-invalid" : ""}`}
               id="price"
               {...register("price", {
                 required: "Vui lòng nhập giá sản phẩm",
@@ -172,9 +162,11 @@ const AddShoeForm = ({
               type="file"
               className={`form-control  ${errors.image ? "is-invalid" : ""}`}
               id="inputImage"
-              {...register("image", { required: "Vui lòng chọn hình ảnh" })}
+              {...register("image", {
+                required : " Vui lòng chọn hình ảnh"
+              })}
               style={{ display: "none" }}
-              onChange={(e) => handleFileChange("image", e)}
+              onChange={(e) => handleFileChange( e)}
             />
             {errors.image && (
               <div className="invalid-feedback">{errors.image.message}</div>

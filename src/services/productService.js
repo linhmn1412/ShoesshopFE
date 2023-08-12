@@ -124,3 +124,28 @@ export const createProduct = async (data) => {
   }
 };
 
+// update product
+export const updateProduct = async (data , id) => {
+  try {
+    const response = await api.post(`/product/${id}/update`, data, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('updateProduct fail', error);
+    throw error;
+  }
+};
+
+// update product
+export const deleteProduct = async (id) => {
+  try {
+    const response = await api.delete(`/product/${id}/delete`);
+    return response;
+  } catch (error) {
+    console.error('deleteProduct fail', error);
+    throw error;
+  }
+};

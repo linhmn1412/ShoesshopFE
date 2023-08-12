@@ -12,6 +12,17 @@ const initialState = {
   notiErrors : null
 };
 
+  // get list account staffs for admin
+  export const getAllStaffs = async (page) => {
+    try {
+      const response = await api.get(`/getAllStaffs?page=${page}`);
+      return response.data;
+    } catch (error) {
+      console.error('getAllStaffs fail', error);
+      throw error;
+    }
+  };
+
 // Thunk action to login
 export const login = createAsyncThunk('login', async (data) => {
   try {

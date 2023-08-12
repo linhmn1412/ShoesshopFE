@@ -4,6 +4,7 @@ import InputSearch from "../../../components/Header/InputSearch/InputSearch";
 import AddModal from "./AddModal";
 import { useState } from "react";
 import EditModal from "./EditModal";
+import { formatMoney } from "../../../utils/formatMoney";
 
 const ManageForm = ({
   name,
@@ -91,7 +92,7 @@ const ManageForm = ({
         <tbody>
           {!loading && allData.length === 0 ? (
             <tr>
-              <td colSpan="8" className="fw-bold">
+              <td colSpan={columnHeaders.length} className="fw-bold">
                 Chưa có dữ liệu nào!
               </td>
             </tr>
@@ -101,7 +102,14 @@ const ManageForm = ({
               <tr key={index}>
                {columnHeaders.map((column,index) => (
                   <td key={index}>
-                    <span className="fw-bold">{val[column.key]}</span>
+                    {column.key === 'status' && <span>{val[column.key] === 0 ? "Đã nghỉ" : "Hoạt động"}</span> ||
+                    column.key === 'salary' && <span>{formatMoney(val[column.key]) }</span> ||
+                    column.key === "fullname" && <span className="fw-bold">{val[column.key]}</span>  ||
+                     column.key === "name_category" && <span className="fw-bold">{val[column.key]}</span> ||
+                     column.key === "brand" && <span className="fw-bold">{val[column.key]}</span> ||
+                     column.key === "name_discount" && <span className="fw-bold">{val[column.key]}</span> ||
+                     column.key === "discount_value" && <span>{val[column.key]}%</span> ||
+                    <span>{val[column.key]}</span> }
                   </td>
                 ))}
                 <td className="p-0">
