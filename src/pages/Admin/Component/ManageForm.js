@@ -121,14 +121,17 @@ const ManageForm = ({
                   >
                     <MDBIcon fas icon="edit" />
                   </button>
-                  <button
-                    type="button"
-                    className="btn btn-danger"
-                    title="Xóa"
-                    onClick={ handleRemove(val)}
-                  >
-                    <MDBIcon far icon="trash-alt" />
-                  </button>
+                  {name !== 'nhân viên' && (
+                     <button
+                     type="button"
+                     className="btn btn-danger"
+                     title="Xóa"
+                     onClick={ handleRemove(val)}
+                   >
+                     <MDBIcon far icon="trash-alt" />
+                   </button>
+                  )}
+                 
                 </td>
               </tr>
             ))

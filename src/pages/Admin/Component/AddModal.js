@@ -49,8 +49,8 @@ const AddModal = ({ show, handleClose, handleSubmit, title }) => {
             <div
               className="modal-body p-2 "
               style={{
-                marginTop: `${title}` === "khuyến mãi" ? "180px" : "230px",
-                marginBottom: `${title}` === "khuyến mãi" ? "180px" : "230px",
+                marginTop: `${title}` === "khuyến mãi" && "180px" || `${title}` === "nhân viên" && "40px" || "230px",
+                marginBottom: `${title}` === "khuyến mãi" && "180px" || `${title}` === "nhân viên" &&"40px" || "230px"
               }}
             >
               <div className="form-group mx-5 px-2">
@@ -80,6 +80,51 @@ const AddModal = ({ show, handleClose, handleSubmit, title }) => {
                     required
                   />
                 </div>
+              )}
+               {title === "nhân viên" && (
+                <>
+                <div className="form-group mx-5 px-2 mt-4">
+                  <label className="mb-2 primary-text">
+                    Nhập số điện thoại:
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                  />
+                </div>
+                <div className="form-group mx-5 px-2 mt-4">
+                <label className="mb-2 primary-text">
+                  Nhập email:
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                 
+                />
+              </div>
+              <div className="form-group mx-5 px-2 mt-4">
+                <label className="mb-2 primary-text">
+                  Nhập tên đăng nhập:
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                 
+                />
+              </div>
+              <div className="form-group mx-5 px-2 mt-4">
+                <label className="mb-2 primary-text">
+                  Nhập mật khẩu:
+                </label>
+                <input
+                  type="password"
+                  className="form-control"
+            
+                  
+                />
+              </div></>
+                
+                
               )}
             </div>
             <div className="modal-footer">

@@ -53,12 +53,6 @@ const Menu = () => {
           text={"Quản lý Giày Dép"}
         />
         <MenuItem
-          id="6"
-          link={"/admin/shoevariants"}
-          icon={"fas fa-palette"}
-          text={"Quản lý Size và Màu"}
-        />
-        <MenuItem
           id="7"
           link={"/admin/discounts"}
           icon={"fas fa-hand-holding-usd"}
@@ -78,11 +72,6 @@ const Menu = () => {
            icon={"fas fa-user"}
            text={"Quản lý Nhân viên"}
          />
-         <MenuItem
-           id="10"
-           link={"/admin/statistics"}
-           icon={"far fa-bookmark"}
-           text={"Thống kê"}/>
            </>
         ) : (<></>)}
        

@@ -3,8 +3,9 @@ import { useState } from "react";
 
 const EditModal = ({ show, handleClose, handleEdit, data, title }) => {
   const [inputValue, setInputValue] = useState(data.discount_value ? data.discount_value : null);
-  const [inputName, setInputName] = useState(data.name_category || data.name_brand || data.name_discount || "");
-
+  const [inputName, setInputName] = useState(data.name_category || data.name_brand || data.name_discount || data.fullname || "");
+  const [salary, setSalary] = useState(data.salary ? data.salary : null);
+  const [status, setStatus] = useState(data.status ? data.status : null);
   const handleInputNameChange = (e) => {
     setInputName(e.target.value);
   };
@@ -26,7 +27,6 @@ const EditModal = ({ show, handleClose, handleEdit, data, title }) => {
       tabIndex="-1"
       role="dialog"
       aria-labelledby="orderDetailsModalLabel"
-      dialogClassName="no-scroll-modal"
       style={{ display: show ? "block" : "none" }}
     >
       <div className="modal-dialog modal-dialog-scrollable" role="document">
@@ -48,9 +48,13 @@ const EditModal = ({ show, handleClose, handleEdit, data, title }) => {
             ></button>
           </div>
           <form onSubmit={handleFormSubmit} className="h-100">
-            <div className="modal-body p-2 mx-5 " style={{ marginTop: `${title}` === "khuyến mãi" ? "160px" : "200px", marginBottom: `${title}` === "khuyến mãi" ? "160px" : "200px" }}>
-              <p className="primary-text fw-bold mb-1">Mã {title}: {data.id_category || data.id_brand || data.id_discount}</p>
-              <p className="text-muted" style={{fontSize:"12px"}}>Nhân viên cập nhật gần nhất:&ensp;<span className="primary-text fw-bold">{data.name_staff}</span> </p>
+            <div className="modal-body p-2 mx-5 " 
+            style={{ marginTop: `${title}` === "khuyến mãi" && "160px" || `${title}` === "nhân viên" && "120px" || "200px",
+             marginBottom: `${title}` === "khuyến mãi" && "160px" || `${title}` === "nhân viên" && "120px" || "200px" }}>
+             
+              <p className="primary-text fw-bold mb-1">Mã {title}: {data.id_category || data.id_brand || data.id_discount || data.id_staff}</p>
+              {title !== 'nhân viên' && (<>
+              <p className="text-muted" style={{fontSize:"12px"}}>Nhân viên cập nhật gần nhất:&ensp;<span className="primary-text fw-bold">{data.name_staff}</span> </p></>)}
               <div className="form-group  px-2">
                 <label htmlFor="inputValue" className="mb-2 primary-text">Tên {title}:</label>
                 <input
@@ -59,7 +63,6 @@ const EditModal = ({ show, handleClose, handleEdit, data, title }) => {
                   id="inputValue"
                   value={inputName}
                   onChange={handleInputNameChange}
-                  required
                 />
               </div>
               {title === "khuyến mãi" && <div className="form-group  px-2 mt-4">
@@ -70,9 +73,43 @@ const EditModal = ({ show, handleClose, handleEdit, data, title }) => {
                   id="inputValue"
                   value={inputValue}
                   onChange={handleInputValueChange}
-                  required
                 />
               </div>}
+              {title === "nhân viên" && (
+                <>
+                
+                <div className="form-group  px-2 mt-4">
+                <label className="mb-2 primary-text">
+                  Lương:
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  value= {salary}
+                />
+              </div>
+              <div className="form-group px-2 mt-4">
+                <label className="mb-2 primary-text">
+                Trạng thái
+                </label>
+                <select
+                  className={`form-control`}
+                  id="status"
+                  value={status}
+                >
+                <option key='0' value= '0'>
+                      Đã nghỉ
+                </option>
+                <option key='1' value='1'>
+                      Hoạt động
+                </option>
+      
+                </select>
+              </div>
+              </>
+                
+                
+              )}
             </div>
             <div className="modal-footer">
               <button

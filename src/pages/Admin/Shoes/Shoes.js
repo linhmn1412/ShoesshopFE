@@ -145,7 +145,7 @@ const Shoes = () => {
               <th scope="col" width="3%" className="p-1">
                 Mã
               </th>
-              <th scope="col" width="7%" className="p-1">
+              <th scope="col" width="10%" className="p-1">
                 Hình ảnh
               </th>
               <th scope="col" width="12%" className="p-1">
@@ -163,8 +163,8 @@ const Shoes = () => {
               <th scope="col" width="8%" className="p-1">
                 Khuyến mãi
               </th>
-              <th scope="col" width="13%" className="p-1">
-                Mô tả
+              <th scope="col" width="10%" className="p-1">
+                Trạng thái
               </th>
               <th scope="col" width="5%" className="p-1">
                 Kho
@@ -219,7 +219,7 @@ const Shoes = () => {
                     <span>{val.discount_value ? val.discount_value : 0 }%</span>
                   </td>
                   <td className="p-2">
-                    <span>{getDescription(val.description)}</span>
+                    <span>{val.status === true ? "Hoạt động" : "Không hoạt động" }</span>
                   </td>
                   <td className="p-2">
                     <span>{val.stock ? val.stock : 0 }</span>

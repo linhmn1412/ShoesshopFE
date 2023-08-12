@@ -15,7 +15,6 @@ import Categories from "../pages/Admin/Categories/Categories";
 import Brands from "../pages/Admin/Brands/Brands";
 import Shoes from "../pages/Admin/Shoes/Shoes";
 import Discounts from "../pages/Admin/Discounts/Discounts";
-import Statistics from "../pages/Admin/Statistics";
 import OrdersPending from "../pages/Admin/OrdersPending/OrdersPending";
 import Orders from "../pages/Admin/Orders/Order";
 import Account from "../pages/Account/Account";
@@ -131,10 +130,6 @@ const RoutesConfig = () => {
           }
         />
         <Route
-          path="admin/shoevariants"
-          element={<ProtectedAdminRoute></ProtectedAdminRoute>}
-        />
-        <Route
           path="admin/discounts"
           element={
             <ProtectedAdminRoute>
@@ -150,8 +145,7 @@ const RoutesConfig = () => {
             </ProtectedAdminRoute>
           }
         />
-        {user && user.id_role === 1 ? (
-          <>
+        {user && user.id_role === 1 && (
             <Route
               path="admin/accounts"
               element={
@@ -160,17 +154,7 @@ const RoutesConfig = () => {
                 </ProtectedAdminRoute>
               }
             />
-            <Route
-              path="admin/statistics"
-              element={
-                <ProtectedAdminRoute>
-                  <Statistics />
-                </ProtectedAdminRoute>
-              }
-            />
-          </>
-        ) : (
-          <></>
+
         )}
 
         <Route path="/shop" element={<Shop />} />

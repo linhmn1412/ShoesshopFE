@@ -149,3 +149,25 @@ export const deleteProduct = async (id) => {
     throw error;
   }
 };
+ 
+// top selling products
+export const topSellingProducts = async () => {
+  try {
+    const response = await api.get("top5-selling-products");
+    return response.data;
+  } catch (error) {
+    console.error('deleteProduct fail', error);
+    throw error;
+  }
+};
+
+// revenue statistics
+export const revenueStatistics = async () => {
+  try {
+    const response = await api.get("revenue-statistics");
+    return response.data;
+  } catch (error) {
+    console.error('deleteProduct fail', error);
+    throw error;
+  }
+};
