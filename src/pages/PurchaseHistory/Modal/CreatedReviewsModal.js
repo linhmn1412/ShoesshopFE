@@ -80,7 +80,7 @@ const CreatedReviewsModal = ({ show,onCheckReview, handleClose, orderDetails, on
               orderDetails.map((val,index) => (
                 <div key={index} className=" p-2 border-bottom border-1 mt-2 ">
                   <div className="row mb-3">
-                    <div className="col-2"><img src={`${BASE_URL}/product/${val.shoe_variant.id_shoe}/image_1`} alt="" className="w-100" /></div>
+                    <div className="col-2"><img src={`${BASE_URL}/product/${val.shoe_variant.id_shoe}/image`} alt="" className="w-100" /></div>
                     <div className="col-10 primary-text fw-bold">{val.shoe_variant.shoe.name_shoe}</div>
                   </div>
                   <span className="text-muted">Chất lượng sản phẩm:&ensp;</span>

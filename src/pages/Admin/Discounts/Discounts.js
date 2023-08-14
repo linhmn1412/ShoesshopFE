@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { getAllDiscounts } from "../../../services/discountService";
+import { createDiscount, deleteDiscount, getAllDiscounts, updateDiscount } from "../../../services/discountService";
 import ManageForm from "../Component/ManageForm";
+import { toast } from "react-toastify";
 
 const Discounts = () => {
   const columnHeaders = [
@@ -16,9 +17,9 @@ const Discounts = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getDiscounts(currentPage);
+    fetchDiscounts(currentPage);
   }, [currentPage]);
-  const getDiscounts = (page) => {
+  const fetchDiscounts = (page) => {
     getAllDiscounts(page)
       .then((data) => {
         setAllDiscounts(data.data);
@@ -30,7 +31,37 @@ const Discounts = () => {
       });
   };
 
-
+  const handleAddData = (data) =>{
+    createDiscount(data)
+    .then((response)=>{
+      toast.success(response.message);
+      fetchDiscounts(currentPage);
+    });
+  }
+  const handleEditData = (data,id) =>{
+    updateDiscount(data, id)
+  .then((response)=>{
+    if(response.status === 200){
+      toast.success(response.data.message);
+      fetchDiscounts(currentPage);
+    }
+    else{
+      toast.error("Cập nhật khuyến mãi thất bại");
+    }
+  })
+  }
+  const handleRemoveData = (id) =>{
+    deleteDiscount(id)
+  .then((response)=>{
+    if(response.status === 200){
+      toast.success(response.data.message);
+      fetchDiscounts(currentPage);
+    }
+    else{
+      toast.error(response.data.message);
+    }
+  })
+  }
   return (
   
     <ManageForm
@@ -41,6 +72,9 @@ const Discounts = () => {
       currentPage={currentPage}
       onPageChange={(page) => setCurrentPage(page)}
       columnHeaders={columnHeaders}
+      handleAddData={handleAddData}
+      handleEditData={handleEditData}
+      handleRemoveData={handleRemoveData}
     />  
   );
 };

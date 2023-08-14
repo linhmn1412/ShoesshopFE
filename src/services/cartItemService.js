@@ -26,12 +26,9 @@ export const addToCart = async (variant, quantity) => {
 };
 
   // update product to cart
-  export const update = async (id_variant, quantity) => {
+  export const update = async (id, quantity) => {
     try {
-      const response = await api.post("/updateCartItem",{
-        id_variant,
-        quantity
-      });
+      const response = await api.post(`cartItem/${id}/update`, quantity);
       return response.data;
     } catch (error) {
       console.error('update cart item fail', error);
@@ -40,11 +37,9 @@ export const addToCart = async (variant, quantity) => {
   };
 
   // remove product to cart
-  export const remove = async (id_variant) => {
+  export const remove = async (id) => {
     try {
-      const response = await api.post("/removeCartItem",{
-        id_variant,
-      });
+      const response = await api.delete(`cartItem/${id}/delete`);
       return response.data;
     } catch (error) {
       console.error('remove cart item fail', error);

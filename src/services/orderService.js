@@ -47,9 +47,7 @@ export const getOrdersPending = async (page) => {
   // approve order by staff
   export const confirmOrder = async (id) => {
     try {
-      const response = await api.put("order/approve",{
-        id_order: id
-      });
+      const response = await api.put(`order/${id}/confirm`);
       return response.data;
     } catch (error) {
       console.error('getOrdersPending fail', error);
@@ -60,9 +58,7 @@ export const getOrdersPending = async (page) => {
     // cancel order by user
     export const cancelOrder = async (id) => {
       try {
-        const response = await api.put("order/cancel",{
-          id_order: id
-        });
+        const response = await api.put(`order/${id}/cancel`);
         return response.data;
       } catch (error) {
         console.error('cancelOrder fail', error);
@@ -73,9 +69,7 @@ export const getOrdersPending = async (page) => {
      // recieve order by user
      export const receiveOrder = async (id) => {
       try {
-        const response = await api.put("order/receive",{
-          id_order: id
-        });
+        const response = await api.put(`order/{id}/receive`);
         return response.data;
       } catch (error) {
         console.error('receiveOrder fail', error);

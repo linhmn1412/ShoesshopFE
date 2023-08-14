@@ -44,7 +44,6 @@ const [quantity, setQuantity] = useState("");
     formData.append("price",initialData.price);
     formData.append("description", initialData.description ? initialData.description : '');
     handleSubmit(formData, initialData.id_shoe);
-    setInitialData({});
     handleClose();
   };
   const handleFileChange = (e) => {

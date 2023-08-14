@@ -1,5 +1,6 @@
 import { MDBIcon } from "mdb-react-ui-kit";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 
 const EditModal = ({ show, handleClose, handleEdit, data, title }) => {
   const [inputValue, setInputValue] = useState(data.discount_value ? data.discount_value : null);
@@ -14,9 +15,14 @@ const EditModal = ({ show, handleClose, handleEdit, data, title }) => {
     setInputValue(e.target.value);
   };
 
-  const handleFormSubmit = (e) => {
-    e.preventDefault();
-    handleEdit(inputName);
+  const handleFormSubmit = () => {
+    const value = {
+      name : inputName,
+      discount_value : inputValue,
+      salary : salary,
+      status : Number(status),
+    }
+    handleEdit(value, data.id_discount|| data.id_catgegory|| data.id_brand || data.id_staff );
     handleClose();
   };
 
@@ -47,7 +53,7 @@ const EditModal = ({ show, handleClose, handleEdit, data, title }) => {
               onClick={handleClose}
             ></button>
           </div>
-          <form onSubmit={handleFormSubmit} className="h-100">
+          <form className="h-100">
             <div className="modal-body p-2 mx-5 " 
             style={{ marginTop: `${title}` === "khuyến mãi" && "160px" || `${title}` === "nhân viên" && "120px" || "200px",
              marginBottom: `${title}` === "khuyến mãi" && "160px" || `${title}` === "nhân viên" && "120px" || "200px" }}>
@@ -62,7 +68,7 @@ const EditModal = ({ show, handleClose, handleEdit, data, title }) => {
                   className="form-control"
                   id="inputValue"
                   value={inputName}
-                  onChange={handleInputNameChange}
+                  onChange={(e) => setInputName(e.target.value)}
                 />
               </div>
               {title === "khuyến mãi" && <div className="form-group  px-2 mt-4">
@@ -72,7 +78,7 @@ const EditModal = ({ show, handleClose, handleEdit, data, title }) => {
                   className="form-control"
                   id="inputValue"
                   value={inputValue}
-                  onChange={handleInputValueChange}
+                  onChange={(e) => setInputValue(e.target.value)}
                 />
               </div>}
               {title === "nhân viên" && (
@@ -86,6 +92,7 @@ const EditModal = ({ show, handleClose, handleEdit, data, title }) => {
                   type="text"
                   className="form-control"
                   value= {salary}
+                  onChange={(e) => setSalary(e.target.value)}
                 />
               </div>
               <div className="form-group px-2 mt-4">
@@ -96,6 +103,7 @@ const EditModal = ({ show, handleClose, handleEdit, data, title }) => {
                   className={`form-control`}
                   id="status"
                   value={status}
+                  onChange={(e) => setStatus(e.target.value)}
                 >
                 <option key='0' value= '0'>
                       Đã nghỉ
@@ -115,6 +123,7 @@ const EditModal = ({ show, handleClose, handleEdit, data, title }) => {
               <button
                 type="submit"
                 className="btn btn-success primary-background text-white"
+                onClick={ handleFormSubmit}
               >
                 Lưu
               </button>

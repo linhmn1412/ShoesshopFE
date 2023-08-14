@@ -1,22 +1,22 @@
 import { MDBIcon } from "mdb-react-ui-kit";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 
 const AddModal = ({ show, handleClose, handleSubmit, title }) => {
-  const [inputValue, setInputValue] = useState("");
-  const [inputName, setInputName] = useState("");
+  const {
+    register,
+    handleSubmit: handleFormSubmit,
+    formState: { errors },
+    reset,
+  } = useForm();
 
-  const handleInputNameChange = (e) => {
-    setInputName(e.target.value);
-  };
-
-  const handleInputValueChange = (e) => {
-    setInputValue(e.target.value);
-  };
-  const handleFormSubmit = (e) => {
-    e.preventDefault();
-    handleSubmit(inputValue);
+  const onSubmit = (data) => {
+    handleSubmit(data);
+    reset();
     handleClose();
   };
+
+
 
   return (
     <div
@@ -25,7 +25,6 @@ const AddModal = ({ show, handleClose, handleSubmit, title }) => {
       tabIndex="-1"
       role="dialog"
       aria-labelledby="orderDetailsModalLabel"
-      dialogClassName="no-scroll-modal"
       style={{ display: show ? "block" : "none" }}
     >
       <div className="modal-dialog modal-dialog-scrollable" role="document">
@@ -45,7 +44,7 @@ const AddModal = ({ show, handleClose, handleSubmit, title }) => {
               onClick={handleClose}
             ></button>
           </div>
-          <form onSubmit={handleFormSubmit} className="">
+          <form onSubmit={handleFormSubmit(onSubmit)} className="">
             <div
               className="modal-body p-2 "
               style={{
@@ -54,30 +53,29 @@ const AddModal = ({ show, handleClose, handleSubmit, title }) => {
               }}
             >
               <div className="form-group mx-5 px-2">
-                <label htmlFor="inputValue" className="mb-2 primary-text">
+                <label className="mb-2 primary-text">
                   Nhập tên {title}:
                 </label>
                 <input
                   type="text"
                   className="form-control"
-                  id="inputValue"
-                  value={inputName}
-                  onChange={handleInputNameChange}
-                  required
+                 {...register("name", {
+                  required : true
+                 })}
+                  
                 />
               </div>
               {title === "khuyến mãi" && (
                 <div className="form-group mx-5 px-2 mt-4">
-                  <label htmlFor="inputValue" className="mb-2 primary-text">
+                  <label className="mb-2 primary-text">
                     Nhập giá trị {title}:
                   </label>
                   <input
                     type="text"
                     className="form-control"
-                    id="inputValue"
-                    value={inputValue}
-                    onChange={handleInputValueChange}
-                    required
+                    {...register("discount_value", {
+                      required : true
+                     })}
                   />
                 </div>
               )}
@@ -90,6 +88,9 @@ const AddModal = ({ show, handleClose, handleSubmit, title }) => {
                   <input
                     type="text"
                     className="form-control"
+                    {...register("phone_number", {
+                      required : true
+                     })}
                   />
                 </div>
                 <div className="form-group mx-5 px-2 mt-4">
@@ -99,7 +100,9 @@ const AddModal = ({ show, handleClose, handleSubmit, title }) => {
                 <input
                   type="text"
                   className="form-control"
-                 
+                  {...register("email", {
+                    required : true
+                   })}
                 />
               </div>
               <div className="form-group mx-5 px-2 mt-4">
@@ -109,7 +112,9 @@ const AddModal = ({ show, handleClose, handleSubmit, title }) => {
                 <input
                   type="text"
                   className="form-control"
-                 
+                  {...register("username", {
+                    required : true
+                   })}
                 />
               </div>
               <div className="form-group mx-5 px-2 mt-4">
@@ -119,7 +124,9 @@ const AddModal = ({ show, handleClose, handleSubmit, title }) => {
                 <input
                   type="password"
                   className="form-control"
-            
+                  {...register("password", {
+                    required : true
+                   })}
                   
                 />
               </div></>
@@ -136,7 +143,6 @@ const AddModal = ({ show, handleClose, handleSubmit, title }) => {
               </button>
 
               <button
-                type="button"
                 className="btn btn-secondary"
                 data-bs-dismiss="modal"
                 onClick={handleClose}

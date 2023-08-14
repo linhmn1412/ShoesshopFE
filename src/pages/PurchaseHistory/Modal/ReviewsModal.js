@@ -18,7 +18,7 @@ const ReviewsModal = ({ show, handleClose, order }) => {
         <div key={orderDetail.id_variant}>
              <div className="row mb-2">
                       <div className="col-2"> <img
-              src={`${BASE_URL}/product/${orderDetail.shoe_variant.id_shoe}/image_1`}
+              src={`${BASE_URL}/product/${orderDetail.shoe_variant.id_shoe}/image`}
               alt=""
               className="w-100"
             /></div>

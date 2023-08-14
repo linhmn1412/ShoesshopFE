@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import {  } from "../../../services/discountService";
 import ManageForm from "../Component/ManageForm";
-import { getAllBrands } from "../../../services/brandService";
+import { toast } from "react-toastify";
+import { createBrand, deleteBrand, getAllBrands, updateBrand } from "../../../services/brandService";
 
 const Discounts = () => {
   const columnHeaders = [
@@ -15,9 +16,9 @@ const Discounts = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getBrands(currentPage);
+    fetchBrands(currentPage);
   }, [currentPage]);
-  const getBrands = (page) => {
+  const fetchBrands = (page) => {
     getAllBrands(page)
       .then((data) => {
         setAllBrands(data.data);
@@ -30,7 +31,38 @@ const Discounts = () => {
   };
 
   
+const handleAddData = (data) =>{
+  createBrand(data)
+  .then((response)=>{
+    toast.success(response.message);
+    fetchBrands(currentPage);
+  });
+}
+const handleEditData = (data, id) =>{
+  updateBrand(data, id)
+  .then((response)=>{
+    if(response.status === 200){
+      toast.success(response.data.message);
+      fetchBrands(currentPage);
+    }
+    else{
+      toast.error("Cập nhật thương hiệu thất bại");
+    }
+  })
 
+};
+const handleRemoveData = (id) =>{
+  deleteBrand(id)
+  .then((data)=>{
+    if(data.status === 200){
+      toast.success(data.data.message);
+      fetchBrands(currentPage);
+    }
+    else{
+      toast.error(data.data.message);
+    }
+  })
+}
   
   return (
   
@@ -42,6 +74,9 @@ const Discounts = () => {
     currentPage={currentPage}
     onPageChange={(page) => setCurrentPage(page)}
     columnHeaders={columnHeaders}
+    handleAddData={handleAddData}
+    handleEditData={handleEditData}
+    handleRemoveData={handleRemoveData}
   />  
   );
 };

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import ManageForm from "../Component/ManageForm";
-import { getAllCategories } from "../../../services/categoryService";
-import AddModal from "../Component/AddModal";
+import { createCategory, deleteCategory, getAllCategories, updateCategory } from "../../../services/categoryService";
+import { toast } from "react-toastify";
 
 const Categories = () => {
   const columnHeaders = [
@@ -15,9 +15,9 @@ const Categories = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getCategories(currentPage);
+    fetchCategories(currentPage);
   }, [currentPage]);
-  const getCategories = (page) => {
+  const fetchCategories = (page) => {
     getAllCategories(page)
       .then((data) => {
         setAllCategories(data.data);
@@ -28,7 +28,37 @@ const Categories = () => {
         console.log(error);
       });
   };
-
+  const handleAddData = (data) =>{
+    createCategory(data)
+    .then((response)=>{
+      toast.success(response.message);
+      fetchCategories(currentPage);
+    });
+  }
+  const handleEditData = (data,id) =>{
+    updateCategory(data, id)
+    .then((response)=>{
+      if(response.status === 200){
+        toast.success(response.data.message);
+        fetchCategories(currentPage);
+      }
+      else{
+        toast.error("Cập nhật danh mục thất bại");
+      }
+    })
+  }
+  const handleRemoveData = (id) =>{
+    deleteCategory(id)
+  .then((response)=>{
+    if(response.status === 200){
+      toast.success(response.data.message);
+      fetchCategories(currentPage);
+    }
+    else{
+      toast.error(response.data.message);
+    }
+  })
+  }
 
  
 
@@ -42,6 +72,9 @@ const Categories = () => {
       currentPage={currentPage}
       onPageChange={(page) => setCurrentPage(page)}
       columnHeaders={columnHeaders}
+      handleAddData={handleAddData}
+      handleEditData={handleEditData}
+      handleRemoveData={handleRemoveData}
     />  
   );
 };

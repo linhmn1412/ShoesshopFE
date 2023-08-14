@@ -14,13 +14,14 @@ const ManageForm = ({
   currentPage,
   onPageChange,
   columnHeaders,
-
+  handleAddData,
+  handleEditData,
+  handleRemoveData
 }) => {
   const [showModalAdd, setShowModalAdd] = useState(false);
   const [showModalEdit, setShowModalEdit] = useState(false);
   const [dataEdit, setDataEdit] = useState(null);
 
-  const [modalData, setModalData] = useState([]);
   const handleCloseModalAdd = () => {
     setShowModalAdd(false);
   };
@@ -38,22 +39,7 @@ const ManageForm = ({
     setDataEdit(data);
   };
 
-  const handleAddData = () => {
-    // Here, you can implement the logic to add the new data (brand, category, or discount)
-    // based on the modalType and the name provided
-    // For example, you can update your state or make an API call to save the new data
-    // After adding the data, you can update the modalData state with the new data
-    // const newData = { id: modalData.length + 1, name };
-    // setModalData([...modalData, newData]);
-  };
 
-  const handleEditData = () => {
-   
-  };
- 
-  const handleRemove = () => {
-   
-  };
 
   return (
     <div className="p-4">
@@ -126,7 +112,7 @@ const ManageForm = ({
                      type="button"
                      className="btn btn-danger"
                      title="Xóa"
-                     onClick={ handleRemove(val)}
+                     onClick={()=> handleRemoveData(val.id_discount || val.id_category || val.id_brand || val.id_staff )}
                    >
                      <MDBIcon far icon="trash-alt" />
                    </button>

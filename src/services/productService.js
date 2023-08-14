@@ -139,7 +139,7 @@ export const updateProduct = async (data , id) => {
   }
 };
 
-// update product
+// delete product
 export const deleteProduct = async (id) => {
   try {
     const response = await api.delete(`/product/${id}/delete`);
@@ -150,6 +150,16 @@ export const deleteProduct = async (id) => {
   }
 };
  
+export const deleteVariant = async (id) => {
+  try {
+    const response = await api.delete(`/product-variant/${id}/delete`);
+    return response;
+  } catch (error) {
+    console.error('deleteProduct fail', error);
+    throw error;
+  }
+};
+
 // top selling products
 export const topSellingProducts = async () => {
   try {

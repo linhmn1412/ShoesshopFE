@@ -22,3 +22,34 @@ export const getAllBrands = async (page) => {
     throw error;
   }
 };
+
+export const createBrand = async (data) => {
+  try {
+    const response = await api.post("brand/create",data);
+    return response.data;
+  } catch (error) {
+    console.error('createBrand fail', error);
+    throw error;
+  }
+};
+
+export const updateBrand = async (data , id) => {
+  try {
+    const response = await api.put(`brand/${id}/update`,data);
+    return response;
+  } catch (error) {
+    console.error('updateBrand fail', error);
+    throw error;
+  }
+};
+
+
+export const deleteBrand = async (id) => {
+  try {
+    const response = await api.delete(`brand/${id}/delete`);
+    return response;
+  } catch (error) {
+    console.error('deleteBrand fail', error);
+    throw error;
+  }
+};

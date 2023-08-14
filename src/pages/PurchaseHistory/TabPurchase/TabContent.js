@@ -2,7 +2,7 @@ import OrderItem from "./OrderItem";
 import noOrderImage from "../../../assets/images/no-orderpng.png";
 const TabContent = ({ type, orders, ...rest }) => {
 const typeOrders = orders.filter((item) => (type === "All" ? true : item.status === type));
-if(type === "All")
+
   return (  
     <div className="p-2">
       {typeOrders.length > 0 ? (

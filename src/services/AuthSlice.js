@@ -23,6 +23,26 @@ const initialState = {
     }
   };
 
+  export const createStaff = async (data) => {
+    try {
+      const response = await api.post("staff/create", data);
+      return response;
+    } catch (error) {
+      console.error('createStaff fail', error);
+      throw error;
+    }
+  };
+
+  export const updateStaff = async (data,id) => {
+    try {
+      const response = await api.put(`staff/${id}/update`, data);
+      return response;
+    } catch (error) {
+      console.error('createStaff fail', error);
+      throw error;
+    }
+  };
+
 // Thunk action to login
 export const login = createAsyncThunk('login', async (data) => {
   try {

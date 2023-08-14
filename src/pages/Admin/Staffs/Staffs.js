@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import {  } from "../../../services/discountService";
 import ManageForm from "../Component/ManageForm";
-import { getAllStaffs } from "../../../services/AuthSlice";
+import { createStaff, getAllStaffs, registerAccount, updateStaff } from "../../../services/AuthSlice";
+import { toast } from "react-toastify";
 
 const Staffs = () => {
+
   const columnHeaders = [
     { key: "id_staff", title: "Mã NV", width: "5%" },
     { key: "fullname", title: "Họ tên", width: "15%" },
@@ -17,11 +19,10 @@ const Staffs = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [allStaffs, setAllStaffs] = useState([]);
   const [loading, setLoading] = useState(true);
-
   useEffect(() => {
-    getStaffs(currentPage);
+    fetchStaffs(currentPage);
   }, [currentPage]);
-  const getStaffs = (page) => {
+  const fetchStaffs = (page) => {
     getAllStaffs(page)
       .then((data) => {
         setAllStaffs(data.data);
@@ -34,7 +35,30 @@ const Staffs = () => {
   };
 
   
-
+  const handleAddData = (data) =>{
+    createStaff(data)
+    .then((respone)=>{
+      if(respone.status === 200){
+        toast.success(respone.data.message);
+        fetchStaffs(currentPage);
+      }
+      else{
+        toast.error("Đăng ký tài khoản thất bại")
+      }
+    })
+  }
+  const handleEditData = (data,id) =>{
+    updateStaff(data, id)
+    .then((response)=>{
+      if(response.status === 200){
+        toast.success(response.data.message);
+        fetchStaffs(currentPage);
+      }
+      else{
+        toast.error("Cập nhật khuyến mãi thất bại");
+      }
+    })
+  }
   
   return (
   
@@ -46,6 +70,9 @@ const Staffs = () => {
     currentPage={currentPage}
     onPageChange={(page) => setCurrentPage(page)}
     columnHeaders={columnHeaders}
+    handleAddData={handleAddData}
+    handleEditData={handleEditData}
+    handleRemoveData={''}
   />  
   );
 };
