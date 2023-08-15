@@ -234,7 +234,7 @@ const Shoes = () => {
                   <button
                       type="button"
                       className="btn btn-info mx-1 py-2 px-3"
-                      title="Chỉnh sửa"
+                      title="Cập nhật"
                       onClick={()=>handleShowModalEdit(val)}
                     >
                       <MDBIcon fas icon="edit" />

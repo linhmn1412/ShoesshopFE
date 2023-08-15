@@ -28,7 +28,7 @@ const EditModal = ({ show, handleClose, handleEdit, data, title }) => {
 
   return (
     <div
-      className={`modal shadow-5 fade${show ? " show" : ""}`}
+      className={`modal shadow-5 fade${show ? " show fullscreen-overlay" : ""}`}
       id="orderDetailsModal"
       tabIndex="-1"
       role="dialog"

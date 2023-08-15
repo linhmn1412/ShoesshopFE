@@ -5,7 +5,7 @@ import { formatMoney } from "../../utils/formatMoney";
 const Bill = ({ order, show }) => {
     return (  
     <div
-        className={`modal shadow-5 fade${show ? " show" : ""}`}
+        className={`modal shadow-5 fade${show ? " show fullscreen-overlay" : ""}`}
         id="orderDetailsModal"
         tabIndex="-1"
         role="dialog"

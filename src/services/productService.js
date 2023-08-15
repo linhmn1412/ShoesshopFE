@@ -149,11 +149,39 @@ export const deleteProduct = async (id) => {
     throw error;
   }
 };
- 
+export const createVariant = async (data,id) => {
+  try {
+    const response = await api.post(`/product/${id}/variant/create`,data);
+    return response;
+  } catch (error) {
+    console.error('createVariant fail', error);
+    throw error;
+  }
+};
+export const updateVariant = async (data,id) => {
+  try {
+    const response = await api.put(`/product-variant/${id}/update`,data);
+    return response;
+  } catch (error) {
+    console.error('updateVariant fail', error);
+    throw error;
+  }
+}; 
+
 export const deleteVariant = async (id) => {
   try {
     const response = await api.delete(`/product-variant/${id}/delete`);
     return response;
+  } catch (error) {
+    console.error('deleteProduct fail', error);
+    throw error;
+  }
+};
+
+export const getVariantsByIdProduct = async (id) => {
+  try {
+    const response = await api.get(`/getVariants/${id}`);
+    return response.data;
   } catch (error) {
     console.error('deleteProduct fail', error);
     throw error;

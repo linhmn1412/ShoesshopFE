@@ -5,6 +5,7 @@ import AddModal from "./AddModal";
 import { useState } from "react";
 import EditModal from "./EditModal";
 import { formatMoney } from "../../../utils/formatMoney";
+import DeleteComfirm from "../../../components/DeleteConfirm/DeleteConfirm";
 
 const ManageForm = ({
   name,
@@ -20,6 +21,9 @@ const ManageForm = ({
 }) => {
   const [showModalAdd, setShowModalAdd] = useState(false);
   const [showModalEdit, setShowModalEdit] = useState(false);
+  const [showModalRemove, setShowModalRemove] = useState(false);
+  const [idRemove, setIdRemove] = useState(null);
+  const [confirm, setConfirm] = useState('');
   const [dataEdit, setDataEdit] = useState(null);
 
   const handleCloseModalAdd = () => {
@@ -39,6 +43,14 @@ const ManageForm = ({
     setDataEdit(data);
   };
 
+  const handleShowModalRemove= (data) => {
+    setShowModalRemove(true);
+    setIdRemove(data.id_discount || data.id_category || data.id_brand );
+    setConfirm(`Bạn có chắc muốn xóa ${name} ${data.name_discount || data.name_brand || data.name_category  || '' }`)
+  };
+  const handleCloseModalRemove = () => {
+    setShowModalRemove(false);
+  };
 
 
   return (
@@ -112,7 +124,7 @@ const ManageForm = ({
                      type="button"
                      className="btn btn-danger"
                      title="Xóa"
-                     onClick={()=> handleRemoveData(val.id_discount || val.id_category || val.id_brand || val.id_staff )}
+                     onClick={()=> handleShowModalRemove(val)}
                    >
                      <MDBIcon far icon="trash-alt" />
                    </button>
@@ -146,6 +158,15 @@ const ManageForm = ({
         data = {dataEdit}
         handleClose={handleCloseModalEdit}
         handleEdit={handleEditData}
+      />
+    )}
+     {showModalRemove && (
+      <DeleteComfirm
+        confirmContent={confirm}
+        id={idRemove}
+        show={showModalRemove}
+        handleClose={handleCloseModalRemove}
+        handleRemove = {handleRemoveData}
       />
     )}
     </div>

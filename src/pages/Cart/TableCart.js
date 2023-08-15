@@ -8,6 +8,7 @@ import Pagination from "../../components/Pagination/Pagination";
 import { Link } from "react-router-dom";
 import { CartContext } from "../../contexts/CartContext";
 import ButtonsCart from "./ButtonsCart";
+import DeleteComfirm from "../../components/DeleteConfirm/DeleteConfirm";
 const TableCart = () => {
   const {
     cartItems,
@@ -25,6 +26,9 @@ const TableCart = () => {
   const [selectedQuantities, setSelectedQuantities] = useState({});
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [allChecked, setAllChecked] = useState(false);
+  const [showModalRemove, setShowModalRemove] = useState(false);
+  const [idRemove, setIdRemove] = useState(null);
+  const [confirm, setConfirm] = useState(null);
 
   const handleQuantityChange = (id, newQuantity) => {
     setSelectedQuantities((prevQuantities) => ({
@@ -38,9 +42,15 @@ const TableCart = () => {
     }
   };
 
-  const handleRemoveCartItem = (id) => {
-    removeCartItem(id);
+  const handleShowModalRemove= (data) => {
+    setShowModalRemove(true);
+    setIdRemove(data.id_variant );
+    setConfirm(`Bạn có chắc muốn xóa sản phẩm ${data.name_shoe} khỏi giỏ hàng`)
   };
+  const handleCloseModalRemove = () => {
+    setShowModalRemove(false);
+  };
+
 
   const handleSelectProduct = (id) => {
     setSelectedProducts((prevSelected) =>
@@ -211,7 +221,7 @@ const TableCart = () => {
                       type="button"
                       className="btn btn-danger"
                       title="Xóa"
-                      onClick={() => handleRemoveCartItem(val.id_variant)}
+                      onClick={ ()=> handleShowModalRemove(val)}
                     >
                       <MDBIcon far icon="trash-alt" />
                     </button>
@@ -232,6 +242,15 @@ const TableCart = () => {
         )}
       </div>
       <ButtonsCart selectedProducts={selectedProducts} />
+      {showModalRemove && (
+      <DeleteComfirm
+        confirmContent={confirm}
+        id={idRemove}
+        show={showModalRemove}
+        handleClose={handleCloseModalRemove}
+        handleRemove = {removeCartItem}
+      />
+    )}
     </div>
   );
 };

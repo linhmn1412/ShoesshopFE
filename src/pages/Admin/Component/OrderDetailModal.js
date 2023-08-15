@@ -23,7 +23,7 @@ const OrderDetailModal = ({ selectedId, selectedOrder, showModal, handleClose, c
     };
   return (
     <div
-      className={`modal shadow-5 fade${showModal ? " show" : ""}`}
+      className={`modal shadow-5 fade${showModal ? " show fullscreen-overlay" : ""}`}
       id="orderDetailsModal"
       tabIndex="-1"
       role="dialog"

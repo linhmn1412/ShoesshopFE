@@ -3,6 +3,11 @@ import { useForm } from "react-hook-form";
 import { BASE_URL } from "../../../services";
 import { MDBIcon } from "mdb-react-ui-kit";
 import { Link } from "react-router-dom";
+import { createVariant, deleteVariant, getVariantsByIdProduct, updateVariant } from "../../../services/productService";
+import VariantForm from "./VariantForm";
+import DeleteComfirm from "../../../components/DeleteConfirm/DeleteConfirm";
+import { toast } from "react-toastify";
+import { update } from "../../../services/cartItemService";
 
 const EditShoeForm = ({
   data,
@@ -12,11 +17,10 @@ const EditShoeForm = ({
   brands,
   discounts,
 }) => {
+  //product
   const [defaultImage, setDefaultImage] = useState("");
   const [initialData, setInitialData] = useState({});
-  const [color, setColor] = useState("");
-const [size, setSize] = useState("");
-const [quantity, setQuantity] = useState("");
+  const [variants, setVariants] = useState([]);
   useEffect(() => {
     setDefaultImage(`${BASE_URL}/product/${data.id_shoe}/image`);
     setInitialData({
@@ -29,11 +33,20 @@ const [quantity, setQuantity] = useState("");
       description: data.description,
       name_staff: data.name_staff,
       image : null,
-      variants : data.variants,
       status: data.status,
     });
+    fetchVariants(data.id_shoe)
   }, [data.id_shoe]);
 
+  useEffect (()=>{
+    
+  },[]);
+  const fetchVariants = (id)=>{
+    getVariantsByIdProduct(id)
+    .then((data)=>{
+      setVariants(data);
+    })
+  }
   const onSubmit = () => {
     const formData = new FormData();
     formData.append("image",initialData.image);
@@ -43,7 +56,7 @@ const [quantity, setQuantity] = useState("");
     formData.append("id_discount", initialData.id_discount ? initialData.id_discount : '');
     formData.append("price",initialData.price);
     formData.append("description", initialData.description ? initialData.description : '');
-    handleSubmit(formData, initialData.id_shoe);
+    handleSubmit(formData, initialData.id_shoe);  
     handleClose();
   };
   const handleFileChange = (e) => {
@@ -56,6 +69,76 @@ const [quantity, setQuantity] = useState("");
   };
   const handleUploadButtonClick = () => {
     document.getElementById("inputImage").click();
+  };
+  //variant
+  const [showModalAdd, setShowModalAdd] = useState(false);
+  const [showModalEdit, setShowModalEdit] = useState(false);
+  const [showModalRemove, setShowModalRemove] = useState(false);
+  const [idRemove, setIdRemove] = useState(null);
+  const [confirm, setConfirm] = useState('');
+  const [dataEdit, setDataEdit] = useState(null);
+
+  const handleCloseModalAdd = () => {
+    setShowModalAdd(false);
+  };
+
+  const handleShowModalAdd= () => {
+    setShowModalAdd(true);
+  };
+
+  const handleCloseModalEdit = () => {
+    setShowModalEdit(false);
+  };
+
+  const handleShowModalEdit= (variant) => {
+    setShowModalEdit(true);
+    setDataEdit(variant);
+  };
+
+  const handleShowModalRemove= (variant) => {
+    setShowModalRemove(true);
+    setIdRemove(variant.id_variant);
+    setConfirm(`Bạn có chắc muốn xóa sản phẩm ${data.name_shoe} màu ${variant.color} size ${variant.size}?`)
+  };
+  const handleCloseModalRemove = () => {
+    setShowModalRemove(false);
+  };
+
+  const handleAddData = (dataAdd) =>{
+    createVariant(dataAdd,data.id_shoe)
+    .then((response)=>{
+      if(response.status === 200){
+        toast.success(response.data.message);
+        fetchVariants(data.id_shoe);
+      }
+      else{
+        toast.error('Thêm biến thể thất bại');
+      }
+    })
+
+  };
+  const handleEditData = (value) =>{
+    console.log(value);
+    updateVariant(value.quantity_stock, value.id_variant)
+    .then((response)=>{
+     if(response.status === 200){
+      toast.success(response.data.message);
+      fetchVariants(data.id_shoe);
+     }
+    })
+  };
+  const handleRemoveData = (id) =>{
+    deleteVariant(id)
+    .then((response)=>{
+      if(response.status === 200){
+        toast.success(response.data.message);
+        fetchVariants(data.id_shoe);
+      }
+      else {
+        toast.error(response.data.message);
+      }
+    })
+
   };
   if (!initialData.id_shoe) return <></>;
   return (
@@ -245,72 +328,53 @@ const [quantity, setQuantity] = useState("");
               </div>
             </div>
           </div>
-          <div className="col-4" style={{marginTop : "60px"}}>
-            <div className="row mb-3">
-            <div className="form-group col-4">
-                <label htmlFor="name">Màu:</label>
-                <input
-                  type="text"
-                  value={color}
-                  className={`form-control`}
-                  id="color"
-                  onChange={(e) => setColor(e.target.value)}
-                />
-              </div>
-              <div className="form-group col-4">
-                <label htmlFor="name">Size:</label>
-                <input
-                  type="text"
-                  value={size}
-                  className={`form-control`}
-                  id="size"
-                  onChange={(e) => setSize(e.target.value)}
-                />
-              </div>
-              <div className="form-group col-4">
-                <label htmlFor="name">Số lượng:</label>
-                <input
-                  type="text"
-                  value={quantity}
-                  className={`form-control`}
-                  id="stock"
-                  onChange={(e) => setQuantity(e.target.value)}
-                />
-              </div>
-            </div>
-            <center>
-            <span className="btn btn-success primary-background" onClick={()=>handleAddVariant()}>Thêm</span>
-            </center>
-            <p className="mt-3 text-muted">Danh sách các biến thể sản phẩm thêm vào</p>
-            <table className="w-100 border border-1 table " style={{backgroundColor : "#fefefe", fontSize:"13px", height:"280px"}}>
+          <div className="col-4" style={{marginTop : "40px"}}>
+                  <div className="row mb-2 align-items-center">
+                  <p className="text-muted col-8">Các biến thể sản phẩm</p>
+                  <div className="col-4">
+                  <span className="btn btn-success primary-background float-end " onClick={handleShowModalAdd}> <MDBIcon fas icon="plus" /> &ensp;Thêm</span>
+                  </div>
+                  </div>
+                  <div className="table-reponsive">
+                  <table className="w-100 border border-1 table align-middle " style={{backgroundColor : "#fefefe", fontSize:"13px", }}>
               <thead>
                 <tr  className=" w-100 text-center">
-                  <th width= "30%" className="py-2 px-1">Màu</th>
-                  <th width= "30%"className="py-2 px-1">Size</th>
-                  <th width= "30%"className="py-2 px-1">Số lượng</th>
-                  <th width= "10%"className="py-2 px-1">Xóa</th>
+                  <th width= "20%" className="py-2 px-1">Màu</th>
+                  <th width= "20%"className="py-2 px-1">Size</th>
+                  <th width= "20%"className="py-2 px-1">Tồn kho</th>
+                  <th width= "20%"className="py-2 px-1">Đã bán</th>
+                  <th width= "0%"className="py-2 px-1">Thao tác</th>
                 </tr>
               </thead>
               <tbody>
-                { initialData.variants.length === 0 ? (
+                { variants.length === 0 ? (
                 <tr className="text-center text-muted ">
                   <td colSpan='4' >Chưa có dữ liệu!</td>
                 </tr>
                 ):(
-                  initialData.variants.map((val,index)=>(
+                  variants.map((val,index)=>(
                     <tr key={index}  className="text-center">
                       <td className="py-2 px-1">{val.color}</td>
                       <td className="py-2 px-1">{val.size}</td>
                       <td className="py-2 px-1">{val.quantity_stock}</td>
+                      <td className="py-2 px-1">{val.quantity_sold}</td>
                       <td className="py-2 px-1">
+                      <MDBIcon far icon="edit " 
+                       style={{ cursor: "pointer" }}
+                       title="Cập nhật"
+                       onClick={()=>handleShowModalEdit(val)} /> 
+                       &ensp;
                         <MDBIcon far icon="trash-alt " 
                        style={{ cursor: "pointer" }}
-                       onClick={()=>handleDeleteVariant(index)} /></td>
+                       title="xóa"
+                       onClick={()=>handleShowModalRemove(val)} /></td>
                     </tr>
                   ))
                 )}
               </tbody>
             </table>
+                  </div>
+            
           </div>
         </div>
       </div>
@@ -331,6 +395,36 @@ const [quantity, setQuantity] = useState("");
           Lưu
         </button>
       </div>
+      {showModalAdd && (
+      <VariantForm
+        icon = 'plus'
+        title='Thêm biến thể'
+        show={showModalAdd}
+        handleClose={handleCloseModalAdd}
+        data={undefined}
+        handleAdd = {handleAddData}
+      />
+    )}
+    {showModalEdit && (
+      <VariantForm
+      icon= 'edit'
+        title='Chỉnh sửa biến thể'
+        show={showModalEdit}
+        data = {dataEdit}
+        handleClose={handleCloseModalEdit}
+        handleEdit={handleEditData}
+      />
+    )}
+     {showModalRemove && (
+      <DeleteComfirm
+        
+        confirmContent={confirm}
+        id={idRemove}
+        show={showModalRemove}
+        handleClose={handleCloseModalRemove}
+        handleRemove = {handleRemoveData}
+      />
+    )}
     </>
   );
 };
