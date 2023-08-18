@@ -4,7 +4,7 @@ import ListProductShop from "./ListProductShop/ListProductShop";
 import Title from "../../components/Title/Title";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getAllProducts, getProductsBestSellers, getProductsByBrand, getProductsByPrice, getProductsNewArrivals } from "../../services/productService";
+import { getAllProducts, getProductsBestSellers, getProductsByBrand, getProductsByCategory, getProductsByPrice, getProductsNewArrivals } from "../../services/productService";
 const 
 Shop = () => {
 

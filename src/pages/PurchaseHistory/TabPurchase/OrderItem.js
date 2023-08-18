@@ -4,12 +4,23 @@ import { formatMoney } from "../../../utils/formatMoney";
 import { useEffect, useState } from "react";
 import CreatedReviewsModal from "../Modal/CreatedReviewsModal";
 import ReviewsModal from "../Modal/ReviewsModal";
+import DeleteComfirm from "../../../components/DeleteConfirm/DeleteConfirm";
 
 const OrderItem = ({ order , onCancelOrder, onReceiveOrder}) => {
     const [orderData, setOrderData] = useState(order);
     const [showCreatedReviewModal, setShowCreatedReviewModal] = useState(false);
     const [showReviewModal, setShowReviewModal] = useState(false);
     const [isCheckReview, setIsCheckReview] = useState(false);
+    const [showModalCancel, setShowModalCancel] = useState(false);
+    const [idOrderCancel, setIdOrderCancel] = useState(null);
+    const [confirm, setConfirm] = useState('');
+
+    const handleShowModalCancel= (id) => {
+      setShowModalCancel(true);
+      setIdOrderCancel(id);
+      setConfirm(`Bạn có chắc muốn hủy đơn hàng này không?`)
+    };
+
     const handleCreatedReview = () => {
         setShowCreatedReviewModal(true);
       };
@@ -60,7 +71,7 @@ const OrderItem = ({ order , onCancelOrder, onReceiveOrder}) => {
             <div className="float-end">
               {orderData.status === "Chờ xác nhận" && (
                 <button className="btn btn-danger mx-2"
-                onClick={ ()=> onCancelOrder(order.id_order)}
+                onClick={ ()=>handleShowModalCancel(order.id_order)}
                 >Hủy đơn</button>
               )}
               {orderData.status === "Hoàn thành"  && !isCheckReview && (
@@ -97,6 +108,15 @@ const OrderItem = ({ order , onCancelOrder, onReceiveOrder}) => {
           
         />
       )}
+      {showModalCancel && (
+      <DeleteComfirm
+        confirmContent={confirm}
+        id={idOrderCancel}
+        show={showModalCancel}
+        handleClose={()=>setShowModalCancel(false)}
+        handleRemove = {onCancelOrder}
+      />
+    )}
           </div>
         </div>
       </div>

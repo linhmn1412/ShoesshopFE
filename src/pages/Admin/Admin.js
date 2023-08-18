@@ -85,7 +85,7 @@ const Admin = () => {
             </div>
           </div>
         </div>
-        <div clasName="w-100">
+        <div className="w-100">
         <Line data={data} options={options} />
         </div>
       </div>

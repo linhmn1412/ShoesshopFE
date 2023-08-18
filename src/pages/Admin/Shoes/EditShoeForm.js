@@ -74,6 +74,7 @@ const EditShoeForm = ({
   const [showModalAdd, setShowModalAdd] = useState(false);
   const [showModalEdit, setShowModalEdit] = useState(false);
   const [showModalRemove, setShowModalRemove] = useState(false);
+  const [selected, setSelected] = useState(null);
   const [idRemove, setIdRemove] = useState(null);
   const [confirm, setConfirm] = useState('');
   const [dataEdit, setDataEdit] = useState(null);
@@ -90,26 +91,40 @@ const EditShoeForm = ({
     setShowModalEdit(false);
   };
 
-  const handleShowModalEdit= (variant) => {
+  const handleShowModalEdit= (variant, index) => {
     setShowModalEdit(true);
     setDataEdit(variant);
+    setSelected(index);
   };
 
-  const handleShowModalRemove= (variant) => {
+  const handleShowModalRemove= (variant , index) => {
     setShowModalRemove(true);
     setIdRemove(variant.id_variant);
+    setSelected(index);
     setConfirm(`Bạn có chắc muốn xóa sản phẩm ${data.name_shoe} màu ${variant.color} size ${variant.size}?`)
   };
   const handleCloseModalRemove = () => {
     setShowModalRemove(false);
   };
 
-  const handleAddData = (dataAdd) =>{
-    createVariant(dataAdd,data.id_shoe)
+  const handleAddData = (valueData) =>{
+    createVariant(valueData,data.id_shoe)
     .then((response)=>{
       if(response.status === 200){
         toast.success(response.data.message);
-        fetchVariants(data.id_shoe);
+        const existingVariantIndex = variants.findIndex(
+          (variant) => variant.color === valueData.color && variant.size === valueData.size
+        );
+      
+        if (existingVariantIndex !== -1) {
+      
+          const updatedVariants = [...variants];
+          updatedVariants[existingVariantIndex].quantity_stock += valueData.quantity_stock;
+          setVariants(updatedVariants);
+        } else {
+          // Biến thể chưa tồn tại, thêm mới
+          setVariants((prevVariants) => [...prevVariants, {...valueData, quantity_sold : 0}]);
+        }
       }
       else{
         toast.error('Thêm biến thể thất bại');
@@ -117,13 +132,15 @@ const EditShoeForm = ({
     })
 
   };
-  const handleEditData = (value) =>{
-    console.log(value);
-    updateVariant(value.quantity_stock, value.id_variant)
+  const handleEditData = (valueData) =>{
+
+    updateVariant(valueData, valueData.id_variant)
     .then((response)=>{
      if(response.status === 200){
       toast.success(response.data.message);
-      fetchVariants(data.id_shoe);
+      const updatedVariants = [...variants];
+      updatedVariants[selected].quantity_stock = valueData.quantity_stock;
+      setVariants(updatedVariants);
      }
     })
   };
@@ -132,10 +149,12 @@ const EditShoeForm = ({
     .then((response)=>{
       if(response.status === 200){
         toast.success(response.data.message);
-        fetchVariants(data.id_shoe);
+        const updatedVariants = variants.filter((_, i) => i !== selected);
+        setVariants(updatedVariants);
+
       }
       else {
-        toast.error(response.data.message);
+        toast.error(response.data.message);   
       }
     })
 
@@ -173,7 +192,7 @@ const EditShoeForm = ({
                 Trạng thái
                 </label>
                 <select
-                  className={`form-control`}
+                  className={`form-control `}
                   id="status"
                   value={initialData.status}
                   onChange={(e) => {
@@ -183,10 +202,10 @@ const EditShoeForm = ({
                     });
                   }}
                 >
-                <option key='0' value= {false}>
+                <option key='0' value= {false} className="option-custom">
                       Không hoạt động
                 </option>
-                <option key='1' value={true}>
+                <option key='1' value={true} className="option-custom">
                       Hoạt động
                 </option>
       
@@ -362,12 +381,12 @@ const EditShoeForm = ({
                       <MDBIcon far icon="edit " 
                        style={{ cursor: "pointer" }}
                        title="Cập nhật"
-                       onClick={()=>handleShowModalEdit(val)} /> 
+                       onClick={()=>handleShowModalEdit(val,index)} /> 
                        &ensp;
                         <MDBIcon far icon="trash-alt " 
                        style={{ cursor: "pointer" }}
                        title="xóa"
-                       onClick={()=>handleShowModalRemove(val)} /></td>
+                       onClick={()=>handleShowModalRemove(val,index)} /></td>
                     </tr>
                   ))
                 )}
@@ -380,6 +399,12 @@ const EditShoeForm = ({
       </div>
 
       <div className="modal-footer">
+      <button
+          className="btn btn-success primary-background"
+          onClick={onSubmit}
+        >
+          Lưu
+        </button>
         <button
           type="button"
           className="btn btn-secondary"
@@ -388,12 +413,7 @@ const EditShoeForm = ({
         >
           Đóng
         </button>
-        <button
-          className="btn btn-success primary-background"
-          onClick={onSubmit}
-        >
-          Lưu
-        </button>
+       
       </div>
       {showModalAdd && (
       <VariantForm

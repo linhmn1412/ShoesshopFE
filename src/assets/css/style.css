@@ -79,7 +79,7 @@ input[type="number"]::-webkit-outer-spin-button {
   z-index: 9999; /* Đảm bảo hiển thị trên tất cả các thành phần khác */
 }
 .scrollable-container {
-  width: 100%;
+  max-width: 100%;
   height: 800px;
   overflow: auto;
   scrollbar-width: thin;
@@ -88,4 +88,15 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .fixed-screen {
   height: 100vh !important; /* 100% chiều cao của viewport */
+}
+.custom-modal {
+  width: 600px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1050; /* Tùy chọn: Đảm bảo modal hiển thị trên cùng */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

@@ -27,18 +27,25 @@ const TableCart = () => {
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [allChecked, setAllChecked] = useState(false);
   const [showModalRemove, setShowModalRemove] = useState(false);
+  
   const [idRemove, setIdRemove] = useState(null);
   const [confirm, setConfirm] = useState(null);
 
   const handleQuantityChange = (id, newQuantity) => {
+    if (newQuantity < 1) {
+      newQuantity = 1; 
+    }
     setSelectedQuantities((prevQuantities) => ({
       ...prevQuantities,
       [id]: newQuantity,
     }));
+
+
+  
   };
   const handleUpdateCartItem = (id) => {
     if (selectedQuantities[id]) {
-      updateCartItem(id, selectedQuantities[id]);
+     updateCartItem(id, selectedQuantities[id]);
     }
   };
 
@@ -154,7 +161,6 @@ const TableCart = () => {
                     <div className="d-flex">
                       <button
                         className="btn btn-link primary-text border border-1 px-3"
-                        disabled={val.quantity <= 1}
                         onClick={() =>
                           handleQuantityChange(
                             val.id_variant,

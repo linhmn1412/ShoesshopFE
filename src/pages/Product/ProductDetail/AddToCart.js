@@ -12,7 +12,6 @@ const AddToCart = ({data, variants}) => {
   const [selectedSize, setSelectedSize] = useState("");
   const [quantityStock, setQuantityStock] = useState(data.stock);
   const [selectedQuantity, setSelectedQuantity] = useState(1); 
-  const navigate = useNavigate();
   const { createOrUpdateCartItem } = useContext(CartContext);
   const availableColors = data.colors.split(",");
   const availableSizes = data.sizes.split(",");
@@ -52,6 +51,7 @@ const AddToCart = ({data, variants}) => {
       const selectedVariant = variants.find(
         (variant) => variant.size === selectedSize && variant.color === selectedColor
       );
+      console.log(selectedVariant,selectedQuantity)
       createOrUpdateCartItem(selectedVariant,selectedQuantity)
     };
     return ( 

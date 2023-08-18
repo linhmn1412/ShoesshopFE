@@ -11,6 +11,7 @@ import { getAllBrands } from "../../../services/brandService";
 import { getAllDiscounts } from "../../../services/discountService";
 import EditShoeModal from "./EditShoeModal";
 import { toast } from "react-toastify";
+import DeleteComfirm from "../../../components/DeleteConfirm/DeleteConfirm";
 
 const Shoes = () => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -68,6 +69,9 @@ const Shoes = () => {
     const [showModalAdd, setShowModalAdd] = useState(false);
     const [showModalEdit, setShowModalEdit] = useState(false);
     const [editData, setEditData] = useState(null);
+    const [showModalRemove, setShowModalRemove] = useState(false);
+    const [idRemove, setIdRemove] = useState(null);
+    const [confirm, setConfirm] = useState('');
 
   const handleShowModalAdd = () => {
     setShowModalAdd(true);
@@ -94,6 +98,12 @@ const Shoes = () => {
     setEditData(data);
   };
 
+  const handleShowModalRemove = (data) => {
+    setShowModalRemove(true);
+    setIdRemove(data.id_shoe);
+    setConfirm(`Bạn có chắc sẽ xóa sản phẩm ${data.name_shoe} không?`)
+   };
+
   const handleCloseModalEdit = () => {
     setShowModalEdit(false);
   };
@@ -113,6 +123,7 @@ const Shoes = () => {
     deleteProduct(id)
     .then((data)=>{
       if(data.status === 200){
+    setShowModalRemove(false);
         toast.success(data.data.message);
         fetchDataProduct();
       }
@@ -243,7 +254,7 @@ const Shoes = () => {
                       type="button"
                       className="btn btn-danger py-2 px-3"
                       title="Xóa"
-                      onClick={()=>handleDelete(val.id_shoe)}
+                      onClick={()=>handleShowModalRemove(val)}
                     >
                       <MDBIcon far icon="trash-alt" />
                     </button>
@@ -284,6 +295,16 @@ const Shoes = () => {
           handleSubmit = {handleEditProduct}
         />
       )}
+      {showModalRemove && (
+      <DeleteComfirm
+        
+        confirmContent={confirm}
+        id={idRemove}
+        show={showModalRemove}
+        handleClose={() => setShowModalRemove(false)}
+        handleRemove = {handleDelete}
+      />
+    )}
       </div>
      );
 }

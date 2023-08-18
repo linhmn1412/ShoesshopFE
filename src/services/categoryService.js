@@ -35,7 +35,7 @@ export const createCategory = async (data) => {
 
 export const updateCategory = async (data , id) => {
   try {
-    const response = await api.put(`category/${id}update`,data);
+    const response = await api.put(`category/${id}/update`,data);
     return response;
   } catch (error) {
     console.error('updateCategory fail', error);

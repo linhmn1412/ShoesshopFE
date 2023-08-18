@@ -10,7 +10,6 @@ const Bill = ({ order, show }) => {
         tabIndex="-1"
         role="dialog"
         aria-labelledby="orderDetailsModalLabel"
-        dialogClassName="no-scroll-modal"
         style={{ display: show ? "block" : "none" }}
       >
         <div className="modal-dialog modal-dialog-scrollable" role="document">

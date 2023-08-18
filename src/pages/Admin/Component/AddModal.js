@@ -28,8 +28,8 @@ const AddModal = ({ show, handleClose, handleSubmit, title }) => {
       style={{ display: show ? "block" : "none" }}
     >
       <div className="modal-dialog modal-dialog-scrollable" role="document">
-        <div className="modal-content h-100">
-          <div className="modal-header primary-background text-white">
+        <div className="modal-content custom-modal">
+          <div className="modal-header primary-background text-white w-100">
             <h5
               className="modal-title text-uppercase px-2"
               id="orderDetailsModalLabel"
@@ -44,14 +44,11 @@ const AddModal = ({ show, handleClose, handleSubmit, title }) => {
               onClick={handleClose}
             ></button>
           </div>
-          <form onSubmit={handleFormSubmit(onSubmit)} className="">
+         
             <div
-              className="modal-body p-2 "
-              style={{
-                marginTop: `${title}` === "khuyến mãi" && "180px" || `${title}` === "nhân viên" && "40px" || "230px",
-                marginBottom: `${title}` === "khuyến mãi" && "180px" || `${title}` === "nhân viên" &&"40px" || "230px"
-              }}
+              className="modal-body p-2 w-100 mb-4"
             >
+               <form onSubmit={handleFormSubmit(onSubmit)}>
               <div className="form-group mx-5 px-2">
                 <label className="mb-2 primary-text">
                   Nhập tên {title}:
@@ -133,11 +130,13 @@ const AddModal = ({ show, handleClose, handleSubmit, title }) => {
                 
                 
               )}
+                </form>
             </div>
-            <div className="modal-footer">
+            <div className="modal-footer w-100">
               <button
                 type="submit"
                 className="btn btn-success primary-background text-white"
+                onClick={handleFormSubmit(onSubmit)}
               >
                 Lưu
               </button>
@@ -150,7 +149,7 @@ const AddModal = ({ show, handleClose, handleSubmit, title }) => {
                 Đóng
               </button>
             </div>
-          </form>
+        
         </div>
       </div>
     </div>

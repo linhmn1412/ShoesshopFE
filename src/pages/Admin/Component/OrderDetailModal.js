@@ -13,7 +13,7 @@ const OrderDetailModal = ({ selectedId, selectedOrder, showModal, handleClose, c
         toast.success(data.message);
         setConfirm(true);
         if(confirm){
-        handleClose(confirm);
+        handleClose();
         }
       })
       .catch((error)=>{
@@ -32,8 +32,8 @@ const OrderDetailModal = ({ selectedId, selectedOrder, showModal, handleClose, c
       style={{ display: showModal ? "block" : "none" }}
     >
       <div className="modal-dialog modal-dialog-scrollable" role="document">
-        <div className="modal-content h-100">
-          <div className="modal-header primary-background text-white">
+        <div className="modal-content custom-modal">
+          <div className="modal-header primary-background text-white w-100">
             <h5
               className="modal-title text-uppercase"
               id="orderDetailsModalLabel"
@@ -48,7 +48,7 @@ const OrderDetailModal = ({ selectedId, selectedOrder, showModal, handleClose, c
               onClick={handleClose}
             ></button>
           </div>
-          <div className="modal-body p-2">
+          <div className="modal-body p-2 w-100">
           <div>Mã đơn hàng:&ensp;<span className="primary-text fw-bold">{selectedOrder.id_order}</span></div>
             <div>Khách hàng:&ensp;<span className="primary-text fw-bold">{selectedOrder.name_buyer}</span></div>
             <div>Số điện thoại:&ensp;<span className="primary-text fw-bold">{selectedOrder.phone_number}</span></div>
@@ -95,7 +95,7 @@ const OrderDetailModal = ({ selectedId, selectedOrder, showModal, handleClose, c
               </tbody>
             </table>
           </div>
-          <div className="modal-footer">
+          <div className="modal-footer w-100">
             {checkConfirm ? (
                <button
                type="button"

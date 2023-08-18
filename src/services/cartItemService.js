@@ -28,7 +28,9 @@ export const addToCart = async (variant, quantity) => {
   // update product to cart
   export const update = async (id, quantity) => {
     try {
-      const response = await api.post(`cartItem/${id}/update`, quantity);
+      const response = await api.post(`cartItem/${id}/update`, {
+        quantity : quantity
+      });
       return response.data;
     } catch (error) {
       console.error('update cart item fail', error);

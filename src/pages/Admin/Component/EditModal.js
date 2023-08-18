@@ -22,7 +22,7 @@ const EditModal = ({ show, handleClose, handleEdit, data, title }) => {
       salary : salary,
       status : Number(status),
     }
-    handleEdit(value, data.id_discount|| data.id_catgegory|| data.id_brand || data.id_staff );
+    handleEdit(value, data.id_discount|| data.id_category|| data.id_brand || data.id_staff );
     handleClose();
   };
 
@@ -36,8 +36,8 @@ const EditModal = ({ show, handleClose, handleEdit, data, title }) => {
       style={{ display: show ? "block" : "none" }}
     >
       <div className="modal-dialog modal-dialog-scrollable" role="document">
-        <div className="modal-content h-100">
-          <div className="modal-header primary-background text-white">
+        <div className="modal-content custom-modal">
+          <div className="modal-header primary-background text-white w-100">
             <h5
               className="modal-title text-uppercase px-2"
               id="orderDetailsModalLabel"
@@ -53,10 +53,8 @@ const EditModal = ({ show, handleClose, handleEdit, data, title }) => {
               onClick={handleClose}
             ></button>
           </div>
-          <form className="h-100">
-            <div className="modal-body p-2 mx-5 " 
-            style={{ marginTop: `${title}` === "khuyến mãi" && "160px" || `${title}` === "nhân viên" && "120px" || "200px",
-             marginBottom: `${title}` === "khuyến mãi" && "160px" || `${title}` === "nhân viên" && "120px" || "200px" }}>
+            <div className="modal-body p-2 m-5 w-100 " 
+           >
              
               <p className="primary-text fw-bold mb-1">Mã {title}: {data.id_category || data.id_brand || data.id_discount || data.id_staff}</p>
               {title !== 'nhân viên' && (<>
@@ -119,7 +117,7 @@ const EditModal = ({ show, handleClose, handleEdit, data, title }) => {
                 
               )}
             </div>
-            <div className="modal-footer">
+            <div className="modal-footer w-100">
               <button
                 type="submit"
                 className="btn btn-success primary-background text-white"
@@ -136,7 +134,7 @@ const EditModal = ({ show, handleClose, handleEdit, data, title }) => {
                 Đóng
               </button>
             </div>
-          </form>
+
         </div>
       </div>
     </div>

@@ -31,7 +31,7 @@ const Categories = () => {
   const handleAddData = (data) =>{
     createCategory(data)
     .then((response)=>{
-      toast.success(response.message);
+      toast.success(response.data.message);
       fetchCategories(currentPage);
     });
   }

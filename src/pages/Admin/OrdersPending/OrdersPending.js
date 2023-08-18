@@ -39,7 +39,6 @@ const OrdersPending = () => {
   };
 
   const handleCloseModal = (confirm) => {
-    console.log("confirm", confirm);
     setShowModal(false);
     if(confirm){
       getOrders(currentPage);

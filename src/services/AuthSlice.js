@@ -9,6 +9,7 @@ const initialState = {
   loading: false,
   successLogin: false,
   successRegister: false,
+  successUpdateAccount: false,
   notiErrors : null
 };
 
@@ -19,6 +20,26 @@ const initialState = {
       return response.data;
     } catch (error) {
       console.error('getAllStaffs fail', error);
+      throw error;
+    }
+  };
+
+  export const forgotPassword = async (data) => {
+    try {
+      const response = await api.post("forgot-password", data);
+      return response;
+    } catch (error) {
+      console.error('forgotPassword fail', error);
+      throw error;
+    }
+  };
+
+  export const changePassword = async (data) => {
+    try {
+      const response = await api.put("change-password", data);
+      return response;
+    } catch (error) {
+      console.error('changePassword fail', error);
       throw error;
     }
   };
@@ -73,6 +94,15 @@ export const getUserInfo = createAsyncThunk('getUserInfo', async () => {
   }
 });
 
+export const updateUserAccount = createAsyncThunk('updateUserAccount', async (data) => {
+  try {
+    const response = await api.put('/account/update', data);
+    return response;
+  } catch (error) {
+    throw new Error('updateUserAccount failed!');
+  }
+});
+
 const userSlice = createSlice({
   name: 'user',
   initialState: initialState,
@@ -81,6 +111,8 @@ const userSlice = createSlice({
       state.user = null;
       state.accessToken = null;
       state.successLogin = false;
+      state.successUpdateAccount = false;
+      state.successRegister = false;
       state.loading = false;
       state.error = null;
       localStorage.removeItem("token");
@@ -155,6 +187,34 @@ const userSlice = createSlice({
       .addCase(getUserInfo.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
+      })
+      .addCase(updateUserAccount.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.successUpdateAccount = false;
+      })
+      .addCase(updateUserAccount.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        if (action.payload) {
+          if(action.payload.status === 200) {
+            state.user = action.payload.data.user;
+            state.successUpdateAccount = true;
+          }
+          else {
+            state.notiErrors = action.payload.data.errors;
+            state.successUpdateAccount = false;
+
+          }
+        }else{
+          state.successUpdateAccount = false;
+        }
+      })
+      .addCase(updateUserAccount.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+        state.successUpdateAccount = false;
+
       });
   },
 });

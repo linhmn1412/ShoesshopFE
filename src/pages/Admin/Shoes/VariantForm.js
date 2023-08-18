@@ -25,8 +25,8 @@ const VariantForm = ({
 
   const onSubmitAdd = () =>{
     const dataAdd = {
-        color : color,
-        size : size,
+        color : color.trim(),
+        size : size.trim(),
         quantity_stock : Number(quantity),
     }
     handleAdd(dataAdd);
@@ -52,8 +52,8 @@ const VariantForm = ({
       style={{ display: show ? "block" : "none" }}
     >
       <div className="modal-dialog modal-dialog-scrollable" role="document">
-        <div className="modal-content">
-          <div className="modal-header primary-background text-white">
+        <div className="modal-content custom-modal">
+          <div className="modal-header primary-background text-white w-100">
             <h5
               className="modal-title text-uppercase"
               id="orderDetailsModalLabel"
@@ -69,7 +69,7 @@ const VariantForm = ({
               onClick={handleClose}
             ></button>
           </div>
-          <div className="modal-body p-4 primary-text fw-bold">
+          <div className="modal-body p-4 primary-text fw-bold w-100 ">
             <div className="row mb-3">
               {data ? (
                 <>
@@ -80,7 +80,7 @@ const VariantForm = ({
                       type="text"
                       class="form-control rounded"
                       value={quantity}
-                      onChange={(e) => setQuantity(e.target.value)}
+                      onChange={(e) => setQuantity(e.target.value.replace(/\s/g, ''))}
                     />
                   </div>
                 </>
@@ -120,7 +120,7 @@ const VariantForm = ({
               )}
             </div>
           </div>
-          <div className="modal-footer">
+          <div className="modal-footer w-100">
             {data ? (
               <button
                 type="submit"

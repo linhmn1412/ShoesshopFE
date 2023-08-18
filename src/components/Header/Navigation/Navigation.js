@@ -30,7 +30,7 @@ const Navigation = () => {
                   </Link>
               {localStorage.getItem('token') ?(
                  <div className="dropdown">
-                 <Link className="text-reset dropdown-toggle hidden-arrow " to="#" id="navbarDropdownMenuLink" role="button" data-mdb-toggle="dropdown" aria-expanded="false">
+                 <Link className="text-reset dropdown-toggle hidden-arrow" to="#" id="navbarDropdownMenuLink" role="button" data-mdb-toggle="dropdown" aria-expanded="false">
                  <i className="fas fa-user primary-text p-1" ></i> 
                  <span className="primary-text">{user && user.username}</span>
                  </Link>
@@ -38,8 +38,8 @@ const Navigation = () => {
     
                          <li><Link className="dropdown-item primary-text" to="/account" >Tài Khoản</Link></li>
                          <li><Link className="dropdown-item primary-text" to="/purchase" >Đơn Mua</Link></li>
-                         <li><Link className="dropdown-item primary-text" to="/login" onClick={ handleLogOut}>Đăng Xuất</Link></li>
                          {user && user.id_role === 1 || user && user.id_role === 2 ? (<li><Link className="dropdown-item primary-text" to="/admin">Quản lý</Link></li>):(<></>)}
+                         <li><Link className="dropdown-item primary-text" to="/login" onClick={ handleLogOut}>Đăng Xuất</Link></li>
                  </ul>
              </div> 
               ):(

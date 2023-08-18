@@ -2,6 +2,7 @@ import imageWelcome from "../../../assets/images/login.jpg";
 import LoginForm from "./LoginForm";
 import AuthImage from "../AuthImage";
 const Login = () => {
+
   return (
     <section className="vh-100" style={{ backgroundColor: "#eee" }}>
       <div className="container h-100">

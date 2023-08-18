@@ -1,36 +1,70 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Breadcrumb from "../../components/Breadcrumb/Breadcrumb";
 import userImage  from "../../assets/images/user.jpg";
-import { useForm } from "react-hook-form";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useState } from "react";
+import { useEffect } from "react";
+import { changePassword, updateUserAccount } from "../../services/AuthSlice";
+import { toast } from "react-toastify";
+import ChangePassword from "./ChangePassword";
 const AccountProfile = () => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
   const user = useSelector((state) => state.user.user);
-  const loading = useSelector((state) => state.user.loading);
-  const [selectedDate, setSelectedDate] = useState(user ? new Date(user.birth) : null);
+  const successUpdateAccount = useSelector((state) => state.user.successUpdateAccount);
+  const dispatch = useDispatch();
+  const [initData, setInitData] = useState(null);
+  const [showModalChangePassword,setShowModalChangePassword] =useState(false);
+  const [errorPassword,serErrorPassword] =useState([]);
   const breadcrumbItems = [
     { text: "Trang Chủ", link: "/" },
     { text: "Tài khoản", link: "/account" },
   ];
-  const onSubmit = ()=>{
 
-  };
+  useEffect(()=>{
+    if(user){
+      setInitData({
+        username : user.username,
+        fullname : user.fullname,
+        email : user.email,
+        phone_number : user.phone_number,
+        gender : user.gender !== null ? (user.gender === true ? 1 : 0) : null,
+        birth : user.birth ? new Date(user.birth) : null,
+        address : user.address ? user.address : null,
+  
+      })
+    }
+  },[user]);
+
+  const handleUpdateAccount = () =>{
+    console.log(initData)
+    dispatch(updateUserAccount(initData));
+    if(successUpdateAccount) toast.success("Cập nhật thông tin thành công");
+  }
+
+const handleChangePassword = (data) => {
+  changePassword(data)
+  .then((response)=>{
+    if(response.status === 200){
+      toast.success(response.data.message);
+      setShowModalChangePassword(false);
+    }else {
+      serErrorPassword(response.data.errors);
+    }
+  })
+}
+
+  if(!initData) return <></>;
   return (
     <div className="container">
       <Breadcrumb items={breadcrumbItems} />
       <div className="row">
         <div className="col-3 text-center">
           <img src={userImage} className="img-fluid" alt="Sample image" />
-          <p className="fw-bold primary-text ">{user ? user.fullname : ""}</p>
+          <p className="fw-bold primary-text ">{initData.fullname}</p>
           <button
                       type="submit"
                       className="btn btn-success primary-background"
+                      onClick={()=> setShowModalChangePassword(true)}
                     >
                       Đổi mật khẩu
                     </button>
@@ -44,36 +78,28 @@ const AccountProfile = () => {
                   Tài khoản của tôi:
                 </h5>
               </div>
-              {!loading && user ? (
+ 
                 <div className="card-body">
-                  <form onSubmit={handleSubmit(onSubmit)}>
+  
                     <div className=" mb-2">
                       <label className="form-label">Tên đăng nhập: </label>
                       <input
                         type="text"
                         className="form-control"
-                        defaultValue={user.username}
-                        {...register("username", { required: true })}
+                        value={initData.username}
+                        onChange={(e) => setInitData({...initData, username : e.target.value})}
                       />
-                      {errors.username && (
-                        <span className="text-danger">
-                          Tên đăng nhập không được để trống
-                        </span>
-                      )}
+     
                     </div>
                     <div className=" mb-2">
                       <label className="form-label">Họ tên: </label>
                       <input
                         type="text"
                         className="form-control"
-                        defaultValue={user.fullname}
-                        {...register("fullname", { required: true })}
+                        value={initData.fullname}
+                        onChange={(e) => setInitData({...initData, fullname : e.target.value})}
                       />
-                      {errors.fullname && (
-                        <span className="text-danger">
-                          Họ tên không được để trống
-                        </span>
-                      )}
+                
                     </div>
 
                     <div className=" mb-2">
@@ -81,21 +107,10 @@ const AccountProfile = () => {
                       <input
                         type="email"
                         className="form-control"
-                        name="email"
-                        defaultValue={user.email}
-                        {...register("email", {
-                          required: "Số điện thoại không được để trống!",
-                          pattern: {
-                            value: /^\S+@\S+$/i,
-                            message: "Email không đúng định dạng",
-                          },
-                        })}
+                        value={initData.email}
+                        onChange={(e) => setInitData({...initData, email : e.target.value})}
+              
                       />
-                      {errors.email && (
-                        <span className="text-danger">
-                          {errors.email.message}
-                        </span>
-                      )}
                     </div>
 
                     <div className="mb-2">
@@ -103,21 +118,9 @@ const AccountProfile = () => {
                       <input
                         type="text"
                         className="form-control"
-                        name="sdt"
-                        defaultValue={user.phone_number}
-                        {...register("phone_number", {
-                          required: "Số điện thoại không được để trống!",
-                          pattern: {
-                            value: /^\d{10}$/,
-                            message: "Số điện thoại phải có đúng 10 chữ số!",
-                          },
-                        })}
+                        value={initData.phone_number}
+                        onChange={(e) => setInitData({...initData, phone_number : e.target.value})}
                       />
-                      {errors.phone_number && (
-                        <span className="text-danger">
-                          {errors.phone_number.message}
-                        </span>
-                      )}
                     </div>
                     <div className="mb-2">
                       <label className="form-label ">Giới tính:</label>
@@ -125,8 +128,8 @@ const AccountProfile = () => {
                       <label>
                         <input
                           type="radio"
-                          {...register("gender")}
-                          defaultChecked={user.gender === 0}
+                          checked={initData.gender === 0}
+                          onChange={() => setInitData({ ...initData, gender: 0 })}
                         />
                         &ensp;
                         Nam
@@ -135,39 +138,54 @@ const AccountProfile = () => {
                       <label>
                         <input
                           type="radio"
-                          {...register("gender")}
-                          defaultChecked={user.gender === 1}
+                          checked={initData.gender === 1}
+                          onChange={() => setInitData({ ...initData, gender: 1 })}
                         />
                         &ensp;
                         Nữ
                       </label>
                     </div>
-                    <div className=" mb-4">
+                    <div className=" mb-2">
                       <label className="form-label">Ngày sinh:</label>
                       &ensp;
                       <DatePicker
-                        selected={selectedDate}
-                        onChange={(date) =>  setSelectedDate(date)}
-                        {...register("birth")}
-                        dateFormat="dd-MM-yyyy"
+                        selected={initData.birth || new Date("1990-01-01")}
+                        onChange={(date) => setInitData({...initData, birth : date})}
+                        dateFormat="dd/MM/yyyy"
+                      />
+                    </div>
+
+                    <div className=" mb-4">
+                      <label className="form-label">Địa chỉ:</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        value={initData.address || ''}
+                        onChange={(e) => setInitData({...initData, address : e.target.value})}
                       />
                     </div>
 
                     <button
                       type="submit"
                       className="btn btn-success primary-background"
+                      onClick={ handleUpdateAccount}
                     >
                       Lưu
                     </button>
-                  </form>
+
                 </div>
-              ) : (
-                <></>
-              )}
             </div>
           </div>
         </div>
       </div>
+      {showModalChangePassword && (
+      <ChangePassword
+        error = {errorPassword}
+        show={showModalChangePassword}
+        handleClose={()=>setShowModalChangePassword(false)}
+        handleChangePassword = {handleChangePassword}
+      />
+    )}
     </div>
   );
 };

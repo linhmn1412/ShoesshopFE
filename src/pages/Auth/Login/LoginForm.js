@@ -2,7 +2,9 @@ import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from 'react-redux';
-import { login } from "../../../services/AuthSlice";
+import { forgotPassword, login } from "../../../services/AuthSlice";
+import ForgotPassword from "./ForgotPassword";
+import { toast } from "react-toastify";
 const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const { register, handleSubmit, formState: { errors } } = useForm();
@@ -10,14 +12,12 @@ const LoginForm = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
   const successLogin = useSelector((state) => state.user.successLogin);
-  const loading = useSelector((state) => state.user.loading);
+  const [showModalForgotPassword, setShowModalForgotPassword] = useState(false);
+  const [errorEmail, setErrorEmail] = useState('');
   const onSubmit = (data) => {
     dispatch(login(data))
-    .then((response) => {
-      if (response.payload) {
-        
-      }
-    });
+  
+
     if (data.usernameOrEmailOrPhone) {
       const loginData = {
         username: '',
@@ -37,7 +37,7 @@ const LoginForm = () => {
     }
   };
   useEffect(() => {
-    if (!loading && successLogin) {
+    if ( successLogin) {
       if(user){
         if ( user.id_role === 1 || user.id_role === 2) {
           navigate("/admin", { replace: true });
@@ -47,10 +47,28 @@ const LoginForm = () => {
       }
       
     }
+    else{
+     
+    }
   }, [successLogin,user]);
 
+  const handleForgotPassword = (data) => {
+    console.log(data);
+    forgotPassword(data)
+    .then((response)=>{
+      if(response.status === 200){
+        toast.success(response.data.message);
+        setShowModalForgotPassword(false);
+      }else {
+        setErrorEmail(response.data.message);
+      }
+    })
+  }
+
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <>
+      <form onSubmit={handleSubmit(onSubmit)}>
       <div className="mb-4">
         <input type="text" id="form2Example1" className="form-control" {...register("usernameOrEmailOrPhone", { required: true })} placeholder="Tên đăng nhập, Email hoặc Số điện thoại" />
         {errors.usernameOrEmailOrPhone && <span className="text-danger" style={{fontSize:'12px'}}>Bạn phải nhập Tên đăng nhập, Email hoặc Số điện thoại</span>}
@@ -64,7 +82,7 @@ const LoginForm = () => {
       </div>
 
       <div className="d-flex justify-content-end mb-4">
-        <Link to="#">Quên mật khẩu?</Link>
+        <Link to="#" onClick={ ()=> setShowModalForgotPassword(true)}>Quên mật khẩu?</Link>
       </div>
 
       <button type="submit" className="btn btn-success btn-block mb-4">Đăng nhập</button>
@@ -89,6 +107,16 @@ const LoginForm = () => {
         </button>
       </div>
     </form>
+    {showModalForgotPassword && (
+      <ForgotPassword
+        error = {errorEmail}
+        show={showModalForgotPassword}
+        handleClose={()=>setShowModalForgotPassword(false)}
+        handleForgotPassword = {handleForgotPassword}
+      />
+    )}
+    </>
+  
 );
 };
 
