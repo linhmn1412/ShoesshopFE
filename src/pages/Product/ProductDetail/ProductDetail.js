@@ -56,7 +56,7 @@ const ProductDetail = () => {
       .catch((error) => {
         console.log(error);
       });
-  }, [ currentPage]);
+  }, [ currentPage,id]);
 
   if (loading) {
     return <div style={{ height: "100vh" }}></div>;

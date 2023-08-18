@@ -14,7 +14,14 @@ Shop = () => {
     const [totalPages, setTotalPages] = useState(1);
     const [allProducts, setAllProducts] = useState([]);
   
+    const [filteredProducts, setFilteredProducts] = useState(allProducts);
 
+    const handleSearch = (searchTerm) => {
+      const filtered = allProducts.filter((product) =>
+        product.name_shoe.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredProducts(filtered);
+    };
     const fetchProducts = (currentPage, setData, setTotalPages, apiFunction) => {
       apiFunction(currentPage)
         .then((data) => {
@@ -43,6 +50,7 @@ Shop = () => {
     };
 
     useEffect(() => {
+    //  setCurrentPage(1);
       if (category) {
         fetchProductsByFilter(
           category,
@@ -87,10 +95,10 @@ Shop = () => {
   
     return (
         <div>
-             <Header/>
+             <Header onSearch={handleSearch}/>
              <Title content={bestSellers ? 'Best Sellers' : newArrivals ? 'New Arrivals' : category ? category : brand ? brand : price ? price :'Cửa hàng'}/>
             <ListProductShop 
-            products = {allProducts}
+            products = {filteredProducts.length > 0 ? filteredProducts : allProducts}
             currentPage = {currentPage}
             totalPages= {totalPages}
             onPageChange = {(page)=> setCurrentPage(page)}/>

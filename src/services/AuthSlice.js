@@ -8,6 +8,7 @@ const initialState = {
   accessToken: null,
   loading: false,
   successLogin: false,
+  errorLogin : null ,
   successRegister: false,
   successUpdateAccount: false,
   notiErrors : null
@@ -68,7 +69,11 @@ const initialState = {
 export const login = createAsyncThunk('login', async (data) => {
   try {
     const response = await api.post('/login', data);
-    return response.data;
+    const responseData = {
+      data: response.data,
+      status: response.status, 
+    };
+    return responseData;
   } catch (error) {
     throw new Error('Login failed!');
   }
@@ -90,6 +95,7 @@ export const getUserInfo = createAsyncThunk('getUserInfo', async () => {
     const response = await api.get('/user');
     return response.data;
   } catch (error) {
+    
     console.error('Error fetching user info:', error);
   }
 });
@@ -115,6 +121,7 @@ const userSlice = createSlice({
       state.successRegister = false;
       state.loading = false;
       state.error = null;
+      state.errorLogin = null;
       localStorage.removeItem("token");
       clearHeader();
       state.userChanged = false;
@@ -127,28 +134,32 @@ const userSlice = createSlice({
     builder
       .addCase(login.pending, (state) => {
         state.loading = true;
-        state.error = null;
+        state.successLogin = false;
+        state.errorLogin = null;
       })
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
-        state.error = null;
-        if (action.payload) {
+        state.errorLogin = null;
+        if(action.payload){
+        if (action.payload.status === 200) {
           
           state.successLogin = true;
-          state.user = action.payload.user;
-          state.accessToken = action.payload.access_token;
-          localStorage.setItem("token", action.payload.access_token);
-          setHeader(action.payload.access_token);
+          state.user = action.payload.data.user;
+          state.accessToken = action.payload.data.access_token;
+          localStorage.setItem("token", action.payload.data.access_token);
+          setHeader(action.payload.data.access_token);
           state.userChanged = true;
           
         } else {
           state.successLogin = false;
+          state.errorLogin = action.payload.data.errors;
         }
+      }
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
         state.successLogin = false;
-        state.error = action.error.message;
+       // state.error = action.payload.errors;
       })
       .addCase(registerAccount.pending, (state) => {
         state.loading = true;

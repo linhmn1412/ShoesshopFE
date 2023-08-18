@@ -69,7 +69,7 @@ export const getOrdersPending = async (page) => {
      // recieve order by user
      export const receiveOrder = async (id) => {
       try {
-        const response = await api.put(`order/{id}/receive`);
+        const response = await api.put(`order/${id}/receive`);
         return response.data;
       } catch (error) {
         console.error('receiveOrder fail', error);

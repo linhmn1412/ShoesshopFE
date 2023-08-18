@@ -48,7 +48,8 @@ const handleChangePassword = (data) => {
       toast.success(response.data.message);
       setShowModalChangePassword(false);
     }else {
-      serErrorPassword(response.data.errors);
+      toast.error("Mật khẩu không chính xác.");
+      //serErrorPassword(response.data.errors);
     }
   })
 }

@@ -7,14 +7,16 @@ import ForgotPassword from "./ForgotPassword";
 import { toast } from "react-toastify";
 const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const { register, handleSubmit,setError,clearErrors, formState: { errors }} = useForm();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
   const successLogin = useSelector((state) => state.user.successLogin);
+  const errorLogin = useSelector((state) => state.user.errorLogin);
   const [showModalForgotPassword, setShowModalForgotPassword] = useState(false);
   const [errorEmail, setErrorEmail] = useState('');
   const onSubmit = (data) => {
+    clearErrors();
     dispatch(login(data))
   
 
@@ -45,22 +47,30 @@ const LoginForm = () => {
          navigate("/", { replace: true });
         }
       }
-      
     }
     else{
-     
+      if(errorLogin){
+        console.log("error",errorLogin),
+        Object.keys(errorLogin).forEach(fieldName => {
+          setError(fieldName, {
+              type: 'manual',
+              message: errorLogin[fieldName] // get noti from api
+          });
+      });
+      }
     }
-  }, [successLogin,user]);
+  }, [successLogin,user,errorLogin]);
 
   const handleForgotPassword = (data) => {
-    console.log(data);
+    //console.log(data);
     forgotPassword(data)
     .then((response)=>{
       if(response.status === 200){
         toast.success(response.data.message);
         setShowModalForgotPassword(false);
       }else {
-        setErrorEmail(response.data.message);
+        // setErrorEmail(response.data.message);
+        toast.error("Email chưa được đăng ký.");
       }
     })
   }
@@ -69,17 +79,26 @@ const LoginForm = () => {
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
-      <div className="mb-4">
-        <input type="text" id="form2Example1" className="form-control" {...register("usernameOrEmailOrPhone", { required: true })} placeholder="Tên đăng nhập, Email hoặc Số điện thoại" />
-        {errors.usernameOrEmailOrPhone && <span className="text-danger" style={{fontSize:'12px'}}>Bạn phải nhập Tên đăng nhập, Email hoặc Số điện thoại</span>}
+      <div className="form-group my-4">
+        <input type="text" id="form2Example1" className={`form-control  ${errors.password ? "is-invalid" : ""}`}
+         {...register("usernameOrEmailOrPhone", { required: "Tên đăng nhập, Email hoặc Số điện thoại không được để trống" })} placeholder="Tên đăng nhập, Email hoặc Số điện thoại" />
+        {errors.usernameOrEmailOrPhone && <div className="text-danger fw-bold" style={{fontSize:'12px'}}>{errors.usernameOrEmailOrPhone.message}</div>}
       </div>
 
-      <div className="mb-4">
-        <div className="input-group position-relative ">
-          <input type={showPassword ? "text" : "password"} id="form2Example2" className="form-control" {...register("password", { required: true })} placeholder="Mật khẩu" />
+
+        <div className="form-group my-4">
+          <input type= "password" id="form2Example2" autoComplete="current-password"
+          className={`form-control ${errors.password ? "is-invalid" : ""}`}
+          {...register("password", { 
+            required: "Mật khẩu không được để trống",
+            minLength: {
+            value: 6,
+            message: "Mật khẩu phải có ít nhất 6 kí tự",
+        }, })} placeholder="Mật khẩu" />
+{errors.password && <div className="text-danger fw-bold" style={{fontSize:'12px'}}>{errors.password.message}</div>}
         </div>
-        {errors.password && <span className="text-danger" style={{fontSize:'12px'}}>Bạn phải nhập mật khẩu</span>}
-      </div>
+        
+
 
       <div className="d-flex justify-content-end mb-4">
         <Link to="#" onClick={ ()=> setShowModalForgotPassword(true)}>Quên mật khẩu?</Link>

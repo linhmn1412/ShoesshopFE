@@ -41,6 +41,7 @@ const TabPurchase = () => {
     };
 
     const handleRecieveOrder = (id) => {
+      console.log(id);
       const orderIndex = allOrders.findIndex((order) => order.id_order === id);
   
       if (orderIndex !== -1) {
