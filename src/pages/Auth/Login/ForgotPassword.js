@@ -1,13 +1,17 @@
 import { MDBIcon } from "mdb-react-ui-kit";
 import { useForm } from "react-hook-form";
 
-const ForgotPassword = ({error , show, handleForgotPassword, handleClose}) => {
-    const { register, handleSubmit, formState: { errors } } = useForm();
-    const onSubmit = (data) =>{
-        handleForgotPassword(data);
-    }
-    return (  
-        <div
+const ForgotPassword = ({ error, show, handleForgotPassword, handleClose }) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+  const onSubmit = (data) => {
+    handleForgotPassword(data);
+  };
+  return (
+    <div
       className={`modal  bg-none shadow-5 fade${
         show ? " show fullscreen-overlay" : ""
       }`}
@@ -24,8 +28,8 @@ const ForgotPassword = ({error , show, handleForgotPassword, handleClose}) => {
               className="modal-title text-uppercase"
               id="orderDetailsModalLabel"
             >
-             <MDBIcon fas icon="key" />
-              &ensp;Đặt lại mật khẩu
+              <MDBIcon fas icon="key" />
+              &ensp;Quên mật khẩu
             </h5>
             <button
               type="button"
@@ -36,31 +40,28 @@ const ForgotPassword = ({error , show, handleForgotPassword, handleClose}) => {
             ></button>
           </div>
           <div className="modal-body p-4 primary-text fw-bold w-100">
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <div className="form-group my-4 ">
+                <label>Nhập email:</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  {...register("email", {
+                    required: "Vui lòng nhập email.",
+                  })}
+                />
+              </div>
+            </form>
+          </div>
 
-          <form onSubmit = {handleSubmit(onSubmit)}>
-          <div className="form-group my-4 ">
-                    <label>Nhập email:</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      {...register("email", {
-                        required : "Vui lòng nhập email."
-                      })}
-                    />
-                  </div>
-          </form>
-                  
-            </div>
-          
           <div className="modal-footer w-100">
- 
-              <button
-                type="submit"
-                className="btn  btn-success primary-background"
-                onClick={handleSubmit(onSubmit)}
-              >
-                Gửi
-              </button>
+            <button
+              type="submit"
+              className="btn  btn-success primary-background"
+              onClick={handleSubmit(onSubmit)}
+            >
+              Gửi
+            </button>
 
             <button
               className="btn btn-secondary"
@@ -70,11 +71,10 @@ const ForgotPassword = ({error , show, handleForgotPassword, handleClose}) => {
               Đóng
             </button>
           </div>
-          </div>
         </div>
       </div>
+    </div>
+  );
+};
 
-    );
-}
- 
 export default ForgotPassword;

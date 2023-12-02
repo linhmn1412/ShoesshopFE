@@ -10,27 +10,28 @@ import Footer from "../../components/Footer/Footer";
 import CheckoutDetail from "./CheckoutDetail";
 
 const Checkout = () => {
-    const breadcrumbItems = [
-        { text: "Trang Chủ", link: "/" },
-        { text: "Giỏ hàng", link: "/cart" },
-        { text: "Đặt hàng", link: "/checkout" },
-      ];
-  
-    const location = useLocation();
-    const queryParams = new URLSearchParams(location.search);
-    const selectedProductsString = queryParams.get("selectedProducts");
-    const selectedProducts = selectedProductsString ? selectedProductsString.split(",") : [];
-    
-    
-    return ( 
-        <div className="container">
-            <Header/>
-            <Title content="Đặt hàng"/>
-            <Breadcrumb items={breadcrumbItems} />
-            <CheckoutDetail selectedProducts = {selectedProducts}/>
-        <Footer/>
-        </div>
-     );
-}
- 
+  const breadcrumbItems = [
+    { text: "Trang Chủ", link: "/" },
+    { text: "Giỏ hàng", link: "/cart" },
+    { text: "Đặt hàng", link: "/checkout" },
+  ];
+
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const selectedProductsString = queryParams.get("selectedProducts");
+  const selectedProducts = selectedProductsString
+    ? selectedProductsString.split(",")
+    : [];
+
+  return (
+    <div className="container">
+      <Header />
+      <Title content="Đặt hàng" />
+      <Breadcrumb items={breadcrumbItems} />
+      <CheckoutDetail selectedProducts={selectedProducts} />
+      <Footer />
+    </div>
+  );
+};
+
 export default Checkout;

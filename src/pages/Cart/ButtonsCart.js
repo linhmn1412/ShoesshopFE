@@ -4,6 +4,7 @@ import { CartContext } from "../../contexts/CartContext";
 import { formatMoney } from "../../utils/formatMoney";
 
 const ButtonsCart = ({selectedProducts}) => {
+    //console.log(selectedProducts);
     const {cartItems} = useContext(CartContext);
     const [totalPrice, setTotalPrice] = useState(0);
     useEffect(()=>{

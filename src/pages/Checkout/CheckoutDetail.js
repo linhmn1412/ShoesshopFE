@@ -3,8 +3,13 @@ import { useSelector } from "react-redux";
 import { CartContext } from "../../contexts/CartContext";
 import { formatMoney } from "../../utils/formatMoney";
 import { useForm } from "react-hook-form";
-import { createOrder } from "../../services/orderService";
+import {
+  createOrder,
+  getOrderById,
+  payment,
+} from "../../services/orderService";
 import Bill from "./Bill";
+import { useLocation } from "react-router";
 
 const CheckoutDetail = ({ selectedProducts }) => {
   const {
@@ -13,10 +18,13 @@ const CheckoutDetail = ({ selectedProducts }) => {
     formState: { errors },
   } = useForm();
   const user = useSelector((state) => state.user.user);
-  const { cartItems , getCartItems, currentPage } = useContext(CartContext);
+  const { cartItems, getCartItems, currentPage } = useContext(CartContext);
   const [checkCreated, setCheckCreated] = useState(false);
   const [isModalBillOpen, setIsModalBillOpen] = useState(false);
   const [dataBill, setDataBill] = useState({});
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const idOrderParam = queryParams.get("order");
   const checkout = cartItems.filter((item) =>
     selectedProducts.includes(String(item.id_variant))
   );
@@ -32,41 +40,57 @@ const CheckoutDetail = ({ selectedProducts }) => {
       return price;
     }
   };
-
+  useEffect(() => {
+    if (idOrderParam && idOrderParam !== "") {
+      getOrderById(idOrderParam).then((data) => {
+        console.log(data);
+        setDataBill({ ...data.order, orderItems: data.order.order_details });
+        setIsModalBillOpen(true);
+      });
+    }
+  }, [idOrderParam]);
   const onSubmit = (data) => {
-    const orderData = { 
+    const orderData = {
       name_buyer: data.name_buyer,
       phone_number: data.phone_number,
       address: data.address,
       note: data.note,
-      total:totalPrice ,
+      total: totalPrice,
       payment: data.payment,
       orderItems: checkout.map((item) => ({
         id_variant: item.id_variant,
-        name_shoe : item.name_shoe,
+        name_shoe: item.name_shoe,
         quantity: item.quantity,
-        cur_price:priceDiscountProduct(item.price, item.discount_value),
+        cur_price: priceDiscountProduct(item.price, item.discount_value),
       })),
     };
 
-        createOrder(orderData)
-        .then((data)=>{
-            getCartItems(currentPage);
-            setDataBill({...orderData, id_order: data.id_order});
-            setCheckCreated(true);
-           
-        })
-        .then((error)=>{
-            console.log("create order failed ",error);
-        });
-   
+    createOrder(orderData)
+      .then((data) => {
+        getCartItems(currentPage);
+        setDataBill({ ...orderData, id_order: data.id_order });
+        setCheckCreated(true);
+      })
+      .catch((error) => {
+        console.log("create order failed ", error);
+      });
   };
-  useEffect(()=>{
-    if(checkCreated){
-      setIsModalBillOpen(true);
-      }  
-  }, [checkCreated])
- 
+  useEffect(() => {
+    if (checkCreated) {
+      if (dataBill.payment == "Trả tiền khi nhận hàng") {
+        setIsModalBillOpen(true);
+      } else if (dataBill.payment == "Thanh toán VNPay") {
+        const dataPayment = {
+          id_order: dataBill.id_order,
+          total: dataBill.total,
+          currentURL: window.location.href,
+        };
+        payment(dataPayment).then((data) => {
+          window.location.href = data.payment_link;
+        });
+      }
+    }
+  }, [checkCreated]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -81,20 +105,31 @@ const CheckoutDetail = ({ selectedProducts }) => {
 
             <div className="card-body">
               <div className="form-group">
-                <label>Phương thức thanh toán:</label>
-
-                <input
-                  type="text"
-                  className="form-control"
-                  value="Trả tiền khi nhận hàng"
+                <p style={{ marginRight: "10px", marginBottom: "4px" }}>
+                  Phương thức thanh toán:
+                </p>
+                <select
                   {...register("payment", { required: true })}
-                />
+                  style={{ height: "35px", width: "100%" }}
+                >
+                  <option value="" key="">
+                    -- Chọn phương thức thanh toán --
+                  </option>
+                  <option value="Trả tiền khi nhận hàng">
+                    Trả tiền khi nhận hàng
+                  </option>
+                  <option value="Thanh toán VNPay">Thanh toán VNPay</option>
+                </select>
+                {errors.payment && (
+                  <p className="text-danger mb-0">
+                    Tên người nhận không được để trống!
+                  </p>
+                )}
               </div>
               <br />
 
               <div>
                 <label className="form-label">Tên người nhận:</label>
-
                 <input
                   type="text"
                   className="form-control"
@@ -102,7 +137,9 @@ const CheckoutDetail = ({ selectedProducts }) => {
                   {...register("name_buyer", { required: true })}
                 />
                 {errors.name_buyer && (
-                  <span className="text-danger">Tên người nhận không được để trống!</span>
+                  <span className="text-danger">
+                    Tên người nhận không được để trống!
+                  </span>
                 )}
               </div>
               <br />
@@ -113,15 +150,18 @@ const CheckoutDetail = ({ selectedProducts }) => {
                   type="text"
                   className="form-control"
                   defaultValue={user.phone_number}
-                  {...register("phone_number",{
+                  {...register("phone_number", {
                     required: "Số điện thoại không được để trống!",
                     pattern: {
                       value: /^\d{10}$/,
                       message: "Số điện thoại phải có đúng 10 chữ số!",
-                    },})}
+                    },
+                  })}
                 />
                 {errors.phone_number && (
-                  <span className="text-danger">{errors.phone_number.message}</span>
+                  <span className="text-danger">
+                    {errors.phone_number.message}
+                  </span>
                 )}
               </div>
               <br />
@@ -135,7 +175,9 @@ const CheckoutDetail = ({ selectedProducts }) => {
                   {...register("address", { required: true })}
                 />
                 {errors.address && (
-                  <span className="text-danger">Địa chỉ không được để trống!</span>
+                  <span className="text-danger">
+                    Địa chỉ không được để trống!
+                  </span>
                 )}
               </div>
               <br />
@@ -155,7 +197,9 @@ const CheckoutDetail = ({ selectedProducts }) => {
         <div className="col-5">
           <div className="card mb-3">
             <div className="card-header">
-              <h5 className="card-title mt-2 text-uppercase primary-text">Chi tiết đơn hàng</h5>
+              <h5 className="card-title mt-2 text-uppercase primary-text">
+                Chi tiết đơn hàng
+              </h5>
             </div>
             <div className="card-body">
               <table className="table">
@@ -227,12 +271,7 @@ const CheckoutDetail = ({ selectedProducts }) => {
           </div>
         </div>
       </div>
-      {dataBill && (
-        <Bill
-          order={dataBill}
-          show={isModalBillOpen}
-        />
-      )}
+      {dataBill && <Bill order={dataBill} show={isModalBillOpen} />}
     </form>
   );
 };
